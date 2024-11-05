@@ -1,3 +1,3 @@
-# Farmacias-plantao
+# PlantOn
 
 Projeto Integrador
