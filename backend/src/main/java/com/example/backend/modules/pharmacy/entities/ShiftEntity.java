@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
@@ -22,12 +23,10 @@ public class ShiftEntity {
     private LocalDate date;
 
     @NotNull(message = "Horário de início é obrigatório")
-    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "Horário de início deve estar no formato HH:mm")
-    private String startTime;
+    private LocalTime startTime;  // Alterado para LocalTime
 
     @NotNull(message = "Horário de término é obrigatório")
-    @Pattern(regexp = "^([01]?[0-9]|2[0-3]):[0-5][0-9]$", message = "Horário de término deve estar no formato HH:mm")
-    private String endTime;
+    private LocalTime endTime;  // Alterado para LocalTime
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_id", nullable = false)

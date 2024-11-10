@@ -11,6 +11,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -19,7 +20,7 @@ import java.util.UUID;
 public class PharmacyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private UUID id;
 
     @NotBlank(message = "Nome é obrigatório")
@@ -57,6 +58,16 @@ public class PharmacyEntity {
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShiftEntity> shifts;
+
+    public boolean emPlantao() {
+        LocalDateTime now = LocalDateTime.now();
+        for (ShiftEntity shift : shifts) {
+            if (now.isAfter(ChronoLocalDateTime.from(shift.getStartTime())) && now.isBefore(ChronoLocalDateTime.from(shift.getEndTime()))) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "admin_id", nullable = false)
