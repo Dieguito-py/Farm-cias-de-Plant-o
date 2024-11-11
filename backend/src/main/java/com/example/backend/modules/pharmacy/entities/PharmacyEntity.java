@@ -53,8 +53,8 @@ public class PharmacyEntity {
     @DecimalMax(value = "180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
     private Double longitude;
 
-    @CreationTimestamp
-    private LocalDateTime createdAt;
+//    @CreationTimestamp
+//    private LocalDateTime createdAt;
 
     @OneToMany(mappedBy = "pharmacy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ShiftEntity> shifts;
@@ -69,7 +69,7 @@ public class PharmacyEntity {
         return false;
     }
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "admin_id", nullable = false)
     private AdminEntity admin;
 

@@ -7,6 +7,6 @@ import java.util.Optional;
 import java.util.UUID;
 
 public interface AdminRepository extends JpaRepository<AdminEntity, UUID> {
-    Optional<AdminEntity> findByNameOrEmail(String name, String email);
-    Optional<AdminEntity> findByEmail(String email);
+    Optional<AdminEntity> findByCnpjOrEmail(String cnpj, String email);
+    Optional<AdminEntity> findByCnpj(String cnpj);
 }
