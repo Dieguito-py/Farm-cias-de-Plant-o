@@ -3,11 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlantOn</title>
+    <title>Mapa com Rota e Informações - OpenStreetMap</title>
 
+    <!-- Link para o CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-    
+
+    <!-- CSS personalizado -->
     <style>
+        /* Define o mapa para cobrir a tela inteira */
         body, html {
             height: 100%;
             margin: 0;
@@ -15,23 +18,94 @@
         }
 
         #map {
-            height: 100vh;
-            width: 100vw;
+            height: 100vh; /* Ocupa 100% da altura da viewport */
+            width: 100vw; /* Ocupa 100% da largura da viewport */
+        }
+
+        /* Estiliza a div de informações */
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            width: 250px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 15px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            font-family: Arial, sans-serif;
+            color: #333;
+        }
+
+        .info-panel h2 {
+            font-size: 18px;
+            margin: 0 0 10px;
+        }
+
+        .info-panel p {
+            font-size: 14px;
+            margin: 5px 0;
         }
     </style>
 </head>
 <body>
-    <div id="map"></div>
+<!-- Div de informações -->
+<div class="info-panel">
+    <h2>Informações da Rota</h2>
+    <p><strong>Início:</strong> São Paulo, Brasil</p>
+    <p><strong>Destino:</strong> Outro ponto em São Paulo</p>
+    <p><strong>Distância:</strong> será calculada...</p>
+    <p><strong>Duração:</strong> será calculada...</p>
+</div>
 
-    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+<div id="map"></div>
 
-    <script>
-        var map = L.map('map').setView([-23.5505, -46.6333], 13);
+<!-- Link para o JavaScript do Leaflet -->
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 
-        // Modo Dark
-        L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-            // attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-        }).addTo(map);
-    </script>
+<!-- Script JavaScript para inicializar o mapa e criar a rota -->
+<script>
+    // Inicializa o mapa e define a posição inicial
+    var map = L.map('map').setView([-23.5505, -46.6333], 13); // São Paulo, Brasil
+
+    // Adiciona o estilo escuro do Carto Dark Matter
+    L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+    }).addTo(map);
+
+    // Define os pontos de início e destino
+    var start = [-23.5505, -46.6333]; // São Paulo
+    var end = [-23.5687, -46.6488];   // Outro ponto em São Paulo
+
+    // Adiciona marcadores de início e destino
+    L.marker(start).addTo(map).bindPopup("Início").openPopup();
+    L.marker(end).addTo(map).bindPopup("Destino");
+
+    // Usa a API OSRM para calcular a rota
+    var routeUrl = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?geometries=geojson`;
+
+    fetch(routeUrl)
+        .then(response => response.json())
+        .then(data => {
+            // Obtém as coordenadas da rota
+            var routeCoordinates = data.routes[0].geometry.coordinates;
+
+            // Converte coordenadas para o formato LatLng do Leaflet
+            var latLngs = routeCoordinates.map(coord => [coord[1], coord[0]]);
+
+            // Adiciona a rota ao mapa como uma linha
+            var routeLine = L.polyline(latLngs, { color: 'yellow', weight: 4 }).addTo(map);
+
+            // Ajusta o mapa para mostrar toda a rota
+            map.fitBounds(routeLine.getBounds());
+
+            // Atualiza a div de informações com a distância e duração da rota
+            document.querySelector(".info-panel p:nth-child(3)").innerText = `Distância: ${(data.routes[0].distance / 1000).toFixed(2)} km`;
+            document.querySelector(".info-panel p:nth-child(4)").innerText = `Duração: ${(data.routes[0].duration / 60).toFixed(2)} minutos`;
+        })
+        .catch(error => {
+            console.error("Erro ao calcular a rota:", error);
+        });
+</script>
 </body>
 </html>
