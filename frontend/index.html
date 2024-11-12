@@ -3,14 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mapa com Rota e Informações - OpenStreetMap</title>
+    <title>PlantOn</title>
 
-    <!-- Link para o CSS do Leaflet -->
+    <!-- CSS do Leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+    
+    <!-- CSS do Leaflet Routing Machine -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.css" />
 
-    <!-- CSS personalizado -->
     <style>
-        /* Define o mapa para cobrir a tela inteira */
         body, html {
             height: 100%;
             margin: 0;
@@ -18,94 +19,90 @@
         }
 
         #map {
-            height: 100vh; /* Ocupa 100% da altura da viewport */
-            width: 100vw; /* Ocupa 100% da largura da viewport */
-        }
-
-        /* Estiliza a div de informações */
-        .info-panel {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            width: 250px;
-            padding: 20px;
-            background-color: #fff;
-            border-radius: 15px;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            font-family: Arial, sans-serif;
-            color: #333;
-        }
-
-        .info-panel h2 {
-            font-size: 18px;
-            margin: 0 0 10px;
-        }
-
-        .info-panel p {
-            font-size: 14px;
-            margin: 5px 0;
+            height: 100vh;
+            width: 100vw;
         }
     </style>
 </head>
 <body>
-<!-- Div de informações -->
-<div class="info-panel">
-    <h2>Informações da Rota</h2>
-    <p><strong>Início:</strong> São Paulo, Brasil</p>
-    <p><strong>Destino:</strong> Outro ponto em São Paulo</p>
-    <p><strong>Distância:</strong> será calculada...</p>
-    <p><strong>Duração:</strong> será calculada...</p>
-</div>
+    <div id="map"></div>
 
-<div id="map"></div>
+    <!-- Bibliotecas JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script src="https://unpkg.com/leaflet-routing-machine/dist/leaflet-routing-machine.js"></script>
 
-<!-- Link para o JavaScript do Leaflet -->
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        var map = L.map('map').setView([-23.5505, -46.6333], 13); // Posição inicial: São Paulo
 
-<!-- Script JavaScript para inicializar o mapa e criar a rota -->
-<script>
-    // Inicializa o mapa e define a posição inicial
-    var map = L.map('map').setView([-23.5505, -46.6333], 13); // São Paulo, Brasil
+        // Modo Dark do mapa
+        L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            // Attribution opcional
+            // attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+        }).addTo(map);
 
-    // Adiciona o estilo escuro do Carto Dark Matter
-    L.tileLayer('https://basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
-        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-    }).addTo(map);
+        var rota;  // Variável para armazenar a rota
 
-    // Define os pontos de início e destino
-    var start = [-23.5505, -46.6333]; // São Paulo
-    var end = [-23.5687, -46.6488];   // Outro ponto em São Paulo
+        // Função para pegar a localização do usuário e criar a rota
+        function obterLocalizacao() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    var latitude = position.coords.latitude;
+                    var longitude = position.coords.longitude;
 
-    // Adiciona marcadores de início e destino
-    L.marker(start).addTo(map).bindPopup("Início").openPopup();
-    L.marker(end).addTo(map).bindPopup("Destino");
+                    // Ajusta o mapa para a localização do usuário
+                    map.setView(new L.LatLng(latitude, longitude), 13);
 
-    // Usa a API OSRM para calcular a rota
-    var routeUrl = `https://router.project-osrm.org/route/v1/driving/${start[1]},${start[0]};${end[1]},${end[0]}?geometries=geojson`;
+                    // Adiciona um marcador na localização do usuário
+                    L.marker([latitude, longitude]).addTo(map)
+                        .bindPopup("Você está aqui!")
+                        .openPopup();
 
-    fetch(routeUrl)
-        .then(response => response.json())
-        .then(data => {
-            // Obtém as coordenadas da rota
-            var routeCoordinates = data.routes[0].geometry.coordinates;
+                    // Cria a rota inicial para a localização do usuário (sem destino ainda)
+                    rota = L.Routing.control({
+                        waypoints: [
+                            L.latLng(latitude, longitude), // Localização atual do usuário
+                        ],
+                        routeWhileDragging: true, // Atualiza a rota enquanto o usuário arrasta o ponto de destino
+                        createMarker: function() { return null; }, // Não cria marcador nos pontos
+                        lineOptions: {
+                            styles: [{ color: 'blue', weight: 5 }] // Estilo da linha
+                        }
+                    }).addTo(map);
 
-            // Converte coordenadas para o formato LatLng do Leaflet
-            var latLngs = routeCoordinates.map(coord => [coord[1], coord[0]]);
+                }, function(error) {
+                    alert("Erro ao obter a localização: " + error.message);
+                });
+            } else {
+                alert("Geolocalização não é suportada neste navegador.");
+            }
+        }
 
-            // Adiciona a rota ao mapa como uma linha
-            var routeLine = L.polyline(latLngs, { color: 'yellow', weight: 4 }).addTo(map);
+        // Função para atualizar a rota com o novo destino ao clicar no mapa
+        function atualizarRota(destinoLatLng) {
+            if (rota) {
+                // Atualiza os pontos da rota: ponto de partida (usuário) e novo destino
+                rota.setWaypoints([
+                    rota.getWaypoints()[0], // Mantém o ponto de partida (localização do usuário)
+                    destinoLatLng // Atualiza o destino
+                ]);
+            }
+        }
 
-            // Ajusta o mapa para mostrar toda a rota
-            map.fitBounds(routeLine.getBounds());
+        // Evento de clique no mapa para definir o destino da rota
+        map.on('click', function(event) {
+            var destinoLatLng = event.latlng;  // Pega as coordenadas do clique
 
-            // Atualiza a div de informações com a distância e duração da rota
-            document.querySelector(".info-panel p:nth-child(3)").innerText = `Distância: ${(data.routes[0].distance / 1000).toFixed(2)} km`;
-            document.querySelector(".info-panel p:nth-child(4)").innerText = `Duração: ${(data.routes[0].duration / 60).toFixed(2)} minutos`;
-        })
-        .catch(error => {
-            console.error("Erro ao calcular a rota:", error);
+            // Atualiza a rota com o novo destino
+            atualizarRota(destinoLatLng);
+
+            // Adiciona um marcador no destino clicado
+            L.marker(destinoLatLng).addTo(map)
+                .bindPopup("Destino")
+                .openPopup();
         });
-</script>
+
+        // Chama a função ao carregar a página para pegar a localização
+        obterLocalizacao();
+    </script>
 </body>
 </html>
