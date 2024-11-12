@@ -2,12 +2,12 @@ package com.example.backend.modules.pharmacy.entities;
 
 import com.example.backend.modules.admin.entities.AdminEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.DecimalMax;
-import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Builder;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.hibernate.validator.constraints.Length;
 
 import java.time.LocalDateTime;
@@ -17,6 +17,9 @@ import java.util.UUID;
 
 @Data
 @Entity(name = "pharmacy")
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PharmacyEntity {
 
     @Id
@@ -44,14 +47,14 @@ public class PharmacyEntity {
     private String state;
 
     @NotBlank(message = "Latitude é obrigatória")
-    @DecimalMin(value = "-90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
-    @DecimalMax(value = "90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
-    private Double latitude;
+//    @DecimalMin(value = "-90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
+//    @DecimalMax(value = "90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
+    private String latitude;
 
     @NotBlank(message = "Longitude é obrigatória")
-    @DecimalMin(value = "-180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
-    @DecimalMax(value = "180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
-    private Double longitude;
+//    @DecimalMin(value = "-180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
+//    @DecimalMax(value = "180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
+    private String longitude;
 
 //    @CreationTimestamp
 //    private LocalDateTime createdAt;
@@ -69,8 +72,12 @@ public class PharmacyEntity {
         return false;
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "admin_id", nullable = false)
+    @ManyToOne()
+    @JoinColumn(name = "admin_id", insertable = false, updatable = false)
     private AdminEntity admin;
+
+    @NotBlank
+    @Column(name = "admin_id")
+    private UUID adminId;
 
 }

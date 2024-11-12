@@ -23,10 +23,10 @@ public class SecurityConfig {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
-                                .requestMatchers("/companies/").permitAll()
-                                .requestMatchers("/candidates/").permitAll()
-                                .requestMatchers("/auth/company").permitAll()
-                                .requestMatchers("candidate/auth").permitAll()
+                                .requestMatchers("/admin/").permitAll()
+                                .requestMatchers("/pharmacy/").permitAll()
+                                .requestMatchers("/admin/auth/**").permitAll()
+                                .requestMatchers("/auth/admin/").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
 
