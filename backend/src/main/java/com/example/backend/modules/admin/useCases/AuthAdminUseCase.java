@@ -19,7 +19,7 @@ import java.util.Arrays;
 @Service
 public class AuthAdminUseCase {
 
-    @Value("${security.token.secret.candidate}")
+    @Value("${security.token.secret.admin}")
     private String secretKey;
 
     @Autowired
@@ -29,11 +29,11 @@ public class AuthAdminUseCase {
     private PasswordEncoder passwordEncoder;
 
     public AdminResponseDTO execute(AdminRequestDTO authCandidateRequestDTO) throws AuthenticationException {
-        var candidate = this.candidateRepository.findByCnpj(authCandidateRequestDTO.cnpj()).orElseThrow(() -> {
+        var admin = this.candidateRepository.findByCnpj(authCandidateRequestDTO.cnpj()).orElseThrow(() -> {
             throw new UsernameNotFoundException("CNPJ ou senha incorretos.");
         });
 
-        var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), candidate.getPassword());
+        var passwordMatches = this.passwordEncoder.matches(authCandidateRequestDTO.password(), admin.getPassword());
         if (!passwordMatches) {
             throw new UsernameNotFoundException("CNPJ ou senha incorretos.");
         }
@@ -42,8 +42,7 @@ public class AuthAdminUseCase {
         Algorithm algorithm = Algorithm.HMAC256(secretKey);
         var expiresIn = Instant.now().plus(Duration.ofMinutes(30L));
         var token = JWT.create()
-                .withIssuer("planton")
-                .withSubject(candidate.getId().toString())
+                .withSubject(admin.getId().toString())
                 .withClaim("roles", Arrays.asList("admin"))
                 .withExpiresAt(expiresIn)
                 .sign(algorithm);

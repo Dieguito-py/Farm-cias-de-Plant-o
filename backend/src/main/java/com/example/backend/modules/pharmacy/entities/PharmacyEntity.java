@@ -2,8 +2,7 @@ package com.example.backend.modules.pharmacy.entities;
 
 import com.example.backend.modules.admin.entities.AdminEntity;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import lombok.Builder;
 import lombok.NoArgsConstructor;
@@ -23,7 +22,7 @@ import java.util.UUID;
 public class PharmacyEntity {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
     @NotBlank(message = "Nome é obrigatório")
@@ -47,13 +46,9 @@ public class PharmacyEntity {
     private String state;
 
     @NotBlank(message = "Latitude é obrigatória")
-//    @DecimalMin(value = "-90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
-//    @DecimalMax(value = "90.0", inclusive = true, message = "Latitude deve ser entre -90 e 90")
     private String latitude;
 
     @NotBlank(message = "Longitude é obrigatória")
-//    @DecimalMin(value = "-180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
-//    @DecimalMax(value = "180.0", inclusive = true, message = "Longitude deve ser entre -180 e 180")
     private String longitude;
 
 //    @CreationTimestamp
@@ -76,7 +71,7 @@ public class PharmacyEntity {
     @JoinColumn(name = "admin_id", insertable = false, updatable = false)
     private AdminEntity admin;
 
-    @NotBlank
+    @NotNull
     @Column(name = "admin_id")
     private UUID adminId;
 

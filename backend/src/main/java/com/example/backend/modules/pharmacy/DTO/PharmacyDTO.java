@@ -6,7 +6,10 @@ import lombok.Data;
 public class PharmacyDTO {
     private String name;
     private String address;
-//    private double latitude;
-//    private double longitude;
+    private String city;
+    private String state;
+    private String phone;
+    private String latitude;
+    private String longitude;
 }
 

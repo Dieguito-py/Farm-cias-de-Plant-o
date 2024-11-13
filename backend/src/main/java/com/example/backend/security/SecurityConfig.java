@@ -19,7 +19,6 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        //http.csrf(csrf -> csrf.disable());
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         authorize -> authorize
@@ -28,10 +27,16 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/auth/**").permitAll()
                                 .requestMatchers("/auth/admin/").permitAll()
                                 .anyRequest().authenticated())
-                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class);
+                .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
+                .logout(logout -> logout
+                        .logoutUrl("/admin/logout/")
+                        .logoutSuccessUrl("/login?logout/")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID"));
 
         return http.build();
     }
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
