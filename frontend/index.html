@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Farmácias de Plantão</title>
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        /* Estilização geral */
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1abc9c, #2c3e50);
+            color: #444;
+            padding: 20px;
+            position: relative;
+        }
+
+        .container {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            align-items: flex-start;
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        /* Botão de login no canto superior direito */
+        .login-button {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: #1abc9c;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            z-index: 10;
+        }
+
+        .login-button:hover {
+            background-color: #16a085;
+        }
+
+        /* Estilo para o mapa em tela cheia */
+        #map {
+            width: 100%;
+            height: 100vh;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            background-color: #fff;
+            transition: width 0.3s ease, height 0.3s ease;
+        }
+
+        /* Quando a barra de login for exibida */
+        .map-with-login {
+            width: 65%;
+            height: 90vh;
+        }
+
+        /* Formulário de Cadastro */
+        .form-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        .form-group input[type="text"],
+        .form-group input[type="email"],
+        .form-group input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            transition: border 0.3s ease;
+        }
+
+        .form-group input[type="text"]:focus,
+        .form-group input[type="email"]:focus,
+        .form-group input[type="password"]:focus {
+            border-color: #1abc9c;
+            outline: none;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #1abc9c;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            font-weight: 600;
+        }
+
+        .btn:hover {
+            background-color: #16a085;
+        }
+
+        .section {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .login-section {
+            width: 30%;
+            background-color: #f9f9f9;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .link {
+            display: block;
+            margin-top: 10px;
+            font-size: 14px;
+            color: #1abc9c;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .link:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Botão de login sempre visível -->
+<div class="login-button" onclick="toggleLogin()">Entrar</div>
+
+<div class="container">
+    <div id="map" class="map-full"></div>
+
+    <!-- Seção de Login e Cadastro oculta por padrão -->
+    <div id="login-section" class="section login-section">
+        <h2 class="form-title">Login</h2>
+        <form onsubmit="showSection('search-section'); return false;">
+            <div class="form-group">
+                <label for="username">Nome</label>
+                <input type="text" id="username" name="username" required>
+            </div>
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input type="email" id="email" name="email" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm-password">Confirmar Senha</label>
+                <input type="password" id="confirm-password" name="confirm-password" required>
+            </div>
+            <div class="form-group">
+                <label for="cnpj">CNPJ</label>
+                <input type="text" id="cnpj" name="cnpj" required>
+            </div>
+            <button type="submit" class="btn">Criar Conta</button>
+            <span class="link" onclick="showSection('search-section')">Já tem uma conta? Faça login</span>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleLogin() {
+        const loginSection = document.getElementById("login-section");
+        const map = document.getElementById("map");
+
+        // Alterna a exibição da seção de login e ajusta o tamanho do mapa
+        loginSection.classList.toggle("active");
+        map.classList.toggle("map-with-login");
+    }
+
+    function initMap() {
+        const mapOptions = {
+            center: { lat: -23.55052, lng: -46.633308 },
+            zoom: 13
+        };
+        const map = new google.maps.Map(document.getElementById("map"), mapOptions);
+
+        // Exemplo de marcador:
+        new google.maps.Marker({
+            position: { lat: -23.55052, lng: -46.633308 },
+            map,
+            title: "Farmácia Exemplo"
+        });
+    }
+</script>
+
+<!-- Script da API do Google Maps (substitua SUA_API_KEY) -->
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=SUA_API_KEY&callback=initMap">
+</script>
+
+</body>
+</html>
