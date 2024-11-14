@@ -1,6 +1,7 @@
 package com.example.backend.modules.pharmacy.entities;
 
 import com.example.backend.modules.admin.entities.AdminEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Data;
@@ -71,6 +72,7 @@ public class PharmacyEntity {
     @JoinColumn(name = "admin_id", insertable = false, updatable = false)
     private AdminEntity admin;
 
+    @JsonIgnore
     @NotNull
     @Column(name = "admin_id")
     private UUID adminId;
