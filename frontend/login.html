@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login and Sign Up</title>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/loginStyle.css">
+    <script src="js/auth.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="logo">
+        <img src="assets/logo.png" alt="Logo">
+    </div>
+
+    <div class="form-container">
+        <div class="welcome-message">
+            Bem-vindo de volta!
+        </div>
+        <div class="explanation">
+            Faça login para acessar sua conta ou crie uma nova conta para começar.
+        </div>
+
+        <div class="tabs">
+            <button id="login-tab" class="tab-button active">Login</button>
+            <button id="signup-tab" class="tab-button">Sign up</button>
+        </div>
+
+        <div class="form-wrapper">
+            <form id="login-form" class="form active">
+                <div class="input-group">
+                    <label for="login-cnpj">CNPJ</label>
+                    <input type="text" id="login-cnpj" class="cnpj" placeholder="99.999.999/9999-99" required maxlength="18">
+                </div>
+                <div class="input-group">
+                    <label for="login-password">Senha</label>
+                    <input type="password" id="login-password" placeholder="Senha" required minlength="6">
+                </div>
+                <button type="submit" class="submit-button">Login</button>
+            </form>
+
+            <form id="signup-form" class="form">
+                <div class="input-group">
+                    <label for="signup-name">Nome</label>
+                    <input type="text" id="signup-name" placeholder="Nome" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-cnpj">CNPJ</label>
+                    <input type="text" id="signup-cnpj" class="cnpj" placeholder="99.999.999/9999-99" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-email">Email</label>
+                    <input type="email" id="signup-email" placeholder="exemplo@email.com" required>
+                </div>
+                <div class="input-group">
+                    <label for="signup-password">Senha</label>
+                    <input type="text" id="signup-password" placeholder="Senha" required>
+                </div>
+                <button class="submit-button">Sign up</button>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="js/cnpjFormatter.js"></script>
+<script src="js/loginPage.js"></script>
+<script>
+    document.getElementById('login-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const cnpj = document.getElementById('login-cnpj').value;
+            const password = document.getElementById('login-password').value;
+            login(cnpj, password);
+        });
+</script>
+</body>
+</html>

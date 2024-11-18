@@ -20,6 +20,10 @@ public class ListPharmaciesUseCase {
         return pharmacies.stream().map(pharmacy -> {
             PharmacyResponseDTO dto = new PharmacyResponseDTO();
             dto.setName(pharmacy.getName());
+            dto.setAddress(pharmacy.getAddress());
+            dto.setCity(pharmacy.getCity());
+            dto.setState(pharmacy.getState());
+            dto.setPhone(pharmacy.getPhone());
             dto.setLatitude(pharmacy.getLatitude());
             dto.setLongitude(pharmacy.getLongitude());
             return dto;

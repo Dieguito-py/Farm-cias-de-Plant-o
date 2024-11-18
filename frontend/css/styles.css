@@ -1,0 +1,154 @@
+body, html {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    font-family: "League Spartan", sans-serif;
+    
+}
+
+.league-spartan {
+    font-family: "League Spartan", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+#map {
+    height: 100vh;
+    width: 100vw;
+}
+
+#menuButton {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    z-index: 1000;
+    padding: 10px;
+    background-color: #191919;
+    border: none;
+    border-radius: 20%;
+    cursor: pointer;
+}
+
+#menuButton img {
+    display: block;
+    margin: auto;
+    fill: #252525;
+}
+
+.auth-buttons {
+    position: absolute;
+    top: 30px; 
+    right: 30px;
+    z-index: 1000;
+    display: flex;
+    gap: 10px;
+}
+
+.auth-buttons .btn-login {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #E0E0E0;
+    background-color: transparent;
+    border: 2px solid #E0E0E0;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.auth-buttons .btn-login:hover {
+    background-color: #E0E0E0;
+    color: #191919;
+}
+
+.auth-buttons .btn-signup {
+    padding: 8px 12px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #191919;
+    background-color: #E0E0E0;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-buttons .btn-signup:hover {
+    background-color: #c7c7c7;
+}
+
+.auth-buttons button:focus {
+    outline: none;
+}
+
+#sideMenu {
+    position: absolute;
+    top: 30px;
+    left: 30px;
+    width: 300px;
+    min-width: 200px;
+    max-width: 600px;
+    height: calc(100vh - 100px);
+    background-color: #191919;
+    color: #E0E0E0;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    z-index: 999;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#sideMenu::-webkit-scrollbar {
+    display: none; /
+}
+
+#top-space {
+    height: 50px;
+    width: 100%;
+}
+
+.pharmacy-card {
+    border: 2px solid #ccc;
+    border-radius: 16px;
+    padding: 16px;
+    margin-bottom: 8px;
+    flex-shrink: 0;
+    transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s;
+}
+
+.pharmacy-card:hover {
+    border-color: green;
+}
+
+.pharmacy-card h3 {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.pharmacy-card p {
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+#resizeBar {
+    position: absolute;
+    top: calc(50% - 125px);
+    left: 358px;
+    width: 6px;
+    height: 250px;
+    border-radius: 5px;
+    background-color: #424242;
+    cursor: ew-resize;
+    z-index: 1000;
+}
+
+#sideMenu.hidden {
+    display: none;
+}
+
+#resizeBar.hidden {
+    display: none;
+}
