@@ -1,5 +1,3 @@
-// main.js
-
 document.addEventListener('DOMContentLoaded', function () {
     var map = L.map('map', {
         zoomControl: false,
@@ -47,14 +45,19 @@ document.addEventListener('DOMContentLoaded', function () {
         document.body.style.cursor = 'default';
     });
 
-    // Função para adicionar o pin no mapa
     function addPin(latitude, longitude) {
-        // Adiciona o marcador no mapa com base nas coordenadas fornecidas
-        L.marker([latitude, longitude]).addTo(map)
+        const customIcon = L.icon({
+            iconUrl: 'assets/pin.png',
+            iconSize: [32, 39],
+            iconAnchor: [16, 32],
+            popupAnchor: [0, -32]
+        });
+
+        L.marker([latitude, longitude], { icon: customIcon }).addTo(map)
             .bindPopup(`<b>Farmácia</b><br>${latitude}, ${longitude}`).openPopup();
-        map.setView([latitude, longitude], 14); // Alinha o mapa para o marcador
+
+        map.setView([latitude, longitude], 14);
     }
 
-    // Expondo a função addPin globalmente
     window.addPin = addPin;
 });
