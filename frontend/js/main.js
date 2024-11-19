@@ -13,37 +13,39 @@ document.addEventListener('DOMContentLoaded', function () {
     const sideMenu = document.getElementById('sideMenu');
     const resizeBar = document.getElementById('resizeBar');
 
-    menuButton.addEventListener('click', () => {
-        sideMenu.classList.toggle('hidden'); 
+    if (menuButton && sideMenu && resizeBar) {
+        menuButton.addEventListener('click', () => {
+            sideMenu.classList.toggle('hidden');
 
-        if (sideMenu.classList.contains('hidden')) {
-            resizeBar.classList.add('hidden');
-        } else {
-            resizeBar.classList.remove('hidden');
-        }
-    });
-
-    let isResizing = false;
-
-    resizeBar.addEventListener('mousedown', (e) => {
-        isResizing = true;
-        document.body.style.cursor = 'ew-resize';
-    });
-
-    document.addEventListener('mousemove', (e) => {
-        if (isResizing) {
-            const newWidth = e.clientX - sideMenu.getBoundingClientRect().left;
-            if (newWidth >= 200 && newWidth <= 600) {
-                sideMenu.style.width = newWidth + 'px';
-                resizeBar.style.left = newWidth + 58 + 'px';
+            if (sideMenu.classList.contains('hidden')) {
+                resizeBar.classList.add('hidden');
+            } else {
+                resizeBar.classList.remove('hidden');
             }
-        }
-    });
+        });
 
-    document.addEventListener('mouseup', () => {
-        isResizing = false;
-        document.body.style.cursor = 'default';
-    });
+        let isResizing = false;
+
+        resizeBar.addEventListener('mousedown', (e) => {
+            isResizing = true;
+            document.body.style.cursor = 'ew-resize';
+        });
+
+        document.addEventListener('mousemove', (e) => {
+            if (isResizing) {
+                const newWidth = e.clientX - sideMenu.getBoundingClientRect().left;
+                if (newWidth >= 200 && newWidth <= 600) {
+                    sideMenu.style.width = newWidth + 'px';
+                    resizeBar.style.left = newWidth + 58 + 'px';
+                }
+            }
+        });
+
+        document.addEventListener('mouseup', () => {
+            isResizing = false;
+            document.body.style.cursor = 'default';
+        });
+    }
 
     function addPin(latitude, longitude) {
         const customIcon = L.icon({
@@ -60,4 +62,43 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     window.addPin = addPin;
+
+    const jwtToken = localStorage.getItem('jwtToken');
+    const authButtons = document.querySelector('.auth-buttons');
+    const profileMenu = document.getElementById('profile-menu');
+    const profileButton = document.getElementById('profile-button');
+    const profileOptions = document.getElementById('profile-options');
+
+    if (authButtons && profileMenu && profileButton && profileOptions) {
+        if (jwtToken) {
+            authButtons.style.display = 'none';
+            profileMenu.style.display = 'block';
+
+            profileButton.addEventListener('click', () => {
+                const isVisible = profileOptions.style.display === 'block';
+                profileOptions.style.display = isVisible ? 'none' : 'block';
+            });
+
+            document.addEventListener('click', (event) => {
+                if (!profileMenu.contains(event.target)) {
+                    profileOptions.style.display = 'none';
+                }
+            });
+        } else {
+            authButtons.style.display = 'block';
+            profileMenu.style.display = 'none';
+        }
+    }
+
+    const logoutButton = document.getElementById('logout-button');
+    if (logoutButton) {
+        logoutButton.addEventListener('click', function () {
+            logout();
+        });
+    }
 });
+
+function logout() {
+    localStorage.removeItem('jwtToken');
+    window.location.href = 'http://localhost/frontend/';
+}

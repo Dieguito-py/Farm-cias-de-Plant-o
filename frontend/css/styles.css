@@ -68,18 +68,112 @@ body, html {
     font-weight: bold;
     color: #191919;
     background-color: #E0E0E0;
-    border: none;
+    border: 2px solid #E0E0E0;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
 .auth-buttons .btn-signup:hover {
-    background-color: #c7c7c7;
+    background-color: #b9b9b9;
 }
 
 .auth-buttons button:focus {
     outline: none;
+}
+
+#profile-options ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#profile-options li {
+    padding: 8px 0;
+}
+
+#profile-options a {
+    text-decoration: none;
+    font-size: 18px;
+    color: #ffffff;
+    display: block;
+}
+
+/* #profile-options a:hover {
+    color: green;
+} */
+
+.separator {
+    border: 0;
+    border-top: 1px solid #ccc;
+    margin: 8px 0;
+}
+
+#profile-options #logout-button {
+    color: red;
+    font-weight: bold;
+}
+
+#profile-options #logout-button:hover {
+    color: rgb(211, 0, 0);
+}
+
+#profile-menu {
+    position: fixed;
+    top: 30px;
+    right: 30px;
+    z-index: 1000;
+}
+
+#profile-button {
+    background-color: transparent;
+    border: none;
+    border-radius: 50%;
+    width: 61px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+#profile-button:hover {
+    transform: scale(1.05);
+}
+
+#profile-button img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+}
+
+#profile-options {
+    display: none;
+    position: absolute;
+    top: 60px;
+    right: 0;
+    background-color: #191919;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    width: 200px;
+    z-index: 1001;
+}
+
+#profile-options ul {
+    list-style: none;
+    padding: 10px;
+    margin: 0;
+}
+
+#profile-options li {
+    padding: 8px;
+    cursor: pointer;
+}
+
+#profile-options li:hover {
+    border-radius: 6px;
+    background-color: #313131;
 }
 
 #sideMenu {
@@ -120,7 +214,7 @@ body, html {
 }
 
 .pharmacy-card:hover {
-    border-color: green;
+    border-color: #066839;
 }
 
 .pharmacy-card h3 {

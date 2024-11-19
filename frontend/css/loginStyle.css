@@ -55,7 +55,7 @@ body {
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    padding-left: 120px;
+    padding-left: 100px;
     margin-bottom: 120px;
 }
 
@@ -66,7 +66,8 @@ body {
     border-radius: 10px;
     width: 35%;
     padding: 20px;
-    margin-right: 90px;
+    margin-top: 175px;
+    margin-right: 70px;
     overflow-y: auto;
 }
 
@@ -95,8 +96,14 @@ body {
 
 .form-wrapper {
     position: relative;
-    height: 400px;
+    height: 550px;
     overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+#form-wrapper::-webkit-scrollbar {
+    display: none; /
 }
 
 .form {
@@ -145,6 +152,21 @@ body {
 .form-control.invalid {
     border-color: red;
     background-color: #ffe6e6;
+}
+
+.latlng-group {
+    display: flex;
+    justify-content: space-between; /* Espaço uniforme entre os inputs */
+    gap: 16px; /* Espaço entre os dois campos */
+}
+
+.latlng-input {
+    flex: 1; /* Ajusta a largura para que ambos os campos tenham o mesmo tamanho */
+}
+
+/* Opcional: para inputs alinhados ao mesmo tamanho */
+.latlng-input input {
+    width: 100%;
 }
 
 .submit-button {

@@ -47,7 +47,7 @@
                 </div>
                 <div class="input-group">
                     <label for="signup-cnpj">CNPJ</label>
-                    <input type="text" id="signup-cnpj" class="cnpj" placeholder="99.999.999/9999-99" required>
+                    <input type="text" id="signup-cnpj" class="cnpj" placeholder="99.999.999/9999-99" required maxlength="18">
                 </div>
                 <div class="input-group">
                     <label for="signup-email">Email</label>
@@ -57,8 +57,7 @@
                     <label for="signup-password">Senha</label>
                     <input type="text" id="signup-password" placeholder="Senha" required>
                 </div>
-                <button class="submit-button">Sign up</button>
-            </form>
+                <button type="submit" class="submit-button">Sign up</button>
         </div>
     </div>
 </div>
@@ -70,6 +69,16 @@
             const cnpj = document.getElementById('login-cnpj').value;
             const password = document.getElementById('login-password').value;
             login(cnpj, password);
+        });
+</script>
+<script>
+    document.getElementById('signup-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const name = document.getElementById('signup-name').value;
+            const cnpj = document.getElementById('signup-cnpj').value;
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('login-password').value;
+            signup(name, cnpj, email, password);
         });
 </script>
 </body>

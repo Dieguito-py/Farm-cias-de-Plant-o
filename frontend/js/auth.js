@@ -18,6 +18,24 @@ async function login(cnpj, password) {
     }
 }
 
+async function signup(name, cnpj, email, password) {
+    const response = await fetch('http://localhost:8080/admin/', {
+        mode: 'cors',
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name, cnpj, email, password }),
+    });
+
+    if (response.ok) {
+        alert('conta criada!');
+        await login(cnpj, password);
+    } else {
+        alert('Credenciais inválidas!');
+    }
+}
+
 // async function validateAuth() {
 //     const token = localStorage.getItem('jwtToken');
 //     if (!token) {
@@ -40,8 +58,3 @@ async function login(cnpj, password) {
 //         window.location.href = '/index.html';
 //     }
 // }
-
-function logout() {
-    localStorage.removeItem('jwtToken');
-    window.location.href = '/index.html';
-}
