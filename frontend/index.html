@@ -7,7 +7,7 @@
     <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="css/styles.css" />
-    <script></script>
+    <link rel="stylesheet" href="css/modalProfile.css" />
 </head>
 <body>
 
@@ -26,12 +26,58 @@
     </button>
     <div id="profile-options" style="display: none;">
         <ul>
-            <li><a href="/editar-perfil">Editar Perfil</a></li>
+            <li><a class="openModal">Editar Perfil</a></li>
             <li><a href="/gerenciar-farmacias">Gerenciar Farmácias</a></li>
             <hr class="separator">
             <li><a href="javascript:void(0);" id="logout-button" class="logout">Logout</a></li>
         </ul>
     </div>
+</div>
+
+<div id="modal" class="modal hidden">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 class="title">Editar Dados do Usuário</h2>
+      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
+    </div>
+    <form id="userForm">
+      <div class="form-group">
+        <label for="name">Nome:</label>
+        <div class="input-group">
+          <input type="text" id="name" name="name" readonly required>
+          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="name">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cnpj">CNPJ:</label>
+        <div class="input-group">
+          <input type="text" id="cnpj" name="cnpj" readonly required maxlength="18">
+          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="cnpj">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="email">E-mail:</label>
+        <div class="input-group">
+          <input type="email" id="email" name="email" readonly required>
+          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="email">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="password">Senha:</label>
+        <div class="input-group">
+          <input type="text" id="password" name="password" readonly required minlength="6">
+          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="password">
+        </div>
+      </div>
+    </form>
+    <div class="modal-actions">
+      <button type="button" id="saveChanges">Salvar</button>
+      <div class="logout-delete">
+        <button type="button" id="logout">Logout</button>
+        <button type="button" id="deleteAccount">Excluir Conta</button>
+      </div>
+    </div>
+  </div>
 </div>
 
 <div id="sideMenu" class="league-spartan">
@@ -42,6 +88,7 @@
 
 <div id="map"></div>
 
+<script src="js/modal.js"></script>
 <script type="module" src="js/PharmaciesMenu.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="js/main.js"></script>

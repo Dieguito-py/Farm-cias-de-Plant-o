@@ -62,7 +62,7 @@ body {
 .form-container {
     display: flex;
     flex-direction: column;
-    /*background: #141414;*/
+    background: #2F2F2F;
     border-radius: 10px;
     width: 35%;
     padding: 20px;
