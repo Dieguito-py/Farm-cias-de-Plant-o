@@ -4,6 +4,7 @@ import com.example.backend.exeptions.UserFoundException;
 import com.example.backend.modules.admin.entities.AdminEntity;
 import com.example.backend.modules.admin.useCases.CreatAdminUseCase;
 import com.example.backend.modules.admin.useCases.ProfileAdminUseCase;
+import com.example.backend.modules.admin.useCases.UpdateAdminUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
@@ -23,7 +24,8 @@ public class AdminController {
     private CreatAdminUseCase createCandidateUseCase;
     @Autowired
     private ProfileAdminUseCase profileCandidateUseCase;
-
+    @Autowired
+    private UpdateAdminUseCase updateAdminUseCase;
 
     @PostMapping("/")
     public ResponseEntity<Object> create(@Valid @RequestBody AdminEntity adminEntity) {
@@ -42,6 +44,20 @@ public class AdminController {
         try {
             var profile = profileCandidateUseCase.execute(String.valueOf(UUID.fromString(candidateId.toString())));
             return ResponseEntity.ok(profile);
+        } catch (UserFoundException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
+    }
+
+    @PutMapping("/")
+    public ResponseEntity<Object> update(HttpServletRequest httpServletRequest, @Valid @RequestBody AdminEntity updatedAdmin) {
+        String adminId = httpServletRequest.getHeader("adminId");
+        if (adminId == null || adminId.isEmpty()) {
+            return ResponseEntity.badRequest().body("Admin ID is missing in the request headers");
+        }
+        try {
+            var result = updateAdminUseCase.execute(UUID.fromString(adminId), updatedAdmin);
+            return ResponseEntity.ok(result);
         } catch (UserFoundException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
