@@ -5,13 +5,17 @@ import com.example.backend.modules.pharmacy.DTO.PharmacyResponseDTO;
 import com.example.backend.modules.pharmacy.entities.PharmacyEntity;
 import com.example.backend.modules.pharmacy.useCases.CreatePharmacyUseCase;
 import com.example.backend.modules.pharmacy.useCases.ListPharmaciesUseCase;
+import com.example.backend.modules.pharmacy.useCases.GetUserPharmaciesUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/pharmacy")
@@ -22,6 +26,9 @@ public class PharmacyController {
 
     @Autowired
     private ListPharmaciesUseCase listPharmaciesUseCase;
+
+    @Autowired
+    private GetUserPharmaciesUseCase getUserPharmaciesUseCase;
 
     @PostMapping("/")
     public PharmacyEntity create(@Valid @RequestBody PharmacyDTO jobDTO, HttpServletRequest request) {
@@ -42,5 +49,30 @@ public class PharmacyController {
     @GetMapping("/all")
     public List<PharmacyResponseDTO> list() {
         return listPharmaciesUseCase.execute();
+    }
+
+    @GetMapping("/user-pharmacies")
+    public ResponseEntity<List<PharmacyResponseDTO>> getUserPharmacies(HttpServletRequest request) {
+        String adminId = request.getHeader("adminId");
+        if (adminId == null || adminId.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+        try {
+            List<PharmacyEntity> pharmacies = getUserPharmaciesUseCase.execute(UUID.fromString(adminId));
+            List<PharmacyResponseDTO> response = pharmacies.stream()
+                    .map(pharmacy -> PharmacyResponseDTO.builder()
+                            .name(pharmacy.getName())
+                            .address(pharmacy.getAddress())
+                            .city(pharmacy.getCity())
+                            .state(pharmacy.getState())
+                            .phone(pharmacy.getPhone())
+                            .latitude(pharmacy.getLatitude())
+                            .longitude(pharmacy.getLongitude())
+                            .build())
+                    .collect(Collectors.toList());
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
     }
 }
