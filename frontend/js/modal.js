@@ -4,31 +4,21 @@ const saveChangesButton = document.getElementById('saveChanges');
 const modal = document.getElementById('modal');
 const body = document.body;
 
-const userData = {
-  name: "João Silva",
-  cnpj: "12.345.678/0001-90",
-  email: "joao.silva@example.com",
-  password: "123456"
-};
+const token = localStorage.getItem('jwtToken');
+const userId = localStorage.getItem('adminId');
 
-openModalButton.addEventListener('click', () => {
+openModalButton.addEventListener('click', async () => {
   modal.classList.remove('hidden');
   body.classList.add('blurred');
-  loadUserData();
+  await loadUserData();
 });
 
-document.getElementById('closeModal').addEventListener('click', closeModal);
+closeModalButton.addEventListener('click', closeModal);
 
 modal.addEventListener('click', (event) => {
   if (event.target === modal) {
     closeModal();
   }
-});
-
-saveChangesButton.addEventListener('click', () => {
-  const updatedData = getUserFormData();
-  console.log("Dados atualizados:", updatedData);
-  closeModal();
 });
 
 document.querySelectorAll('.edit-icon').forEach(icon => {
@@ -50,20 +40,94 @@ document.querySelectorAll('.edit-icon').forEach(icon => {
   });
 });
 
-function loadUserData() {
-  document.getElementById('name').value = userData.name;
-  document.getElementById('cnpj').value = userData.cnpj;
-  document.getElementById('email').value = userData.email;
-  document.getElementById('password').value = userData.password;
+saveChangesButton.addEventListener('click', async () => {
+  const updatedData = getUserFormData();
+
+  try {
+    const userResponse = await fetch('http://localhost:8080/admin/', {
+    mode: 'cors',
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+      'adminId': `${userId}`
+    },
+      body: JSON.stringify({
+        name: updatedData.name,
+        cnpj: updatedData.cnpj,
+        email: updatedData.email,
+      }),
+    });
+
+    if (userResponse.ok) {
+      console.log("Dados do usuário atualizados com sucesso!");
+    } else {
+      console.error("Erro ao atualizar os dados do usuário:", await userResponse.json());
+    }
+
+    if (updatedData.password) {
+      const passwordResponse = await fetch('http://localhost:8080/admin/change-password', {
+        mode: 'cors',
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+          'adminId': `${userId}`
+        },
+        body: JSON.stringify({
+          newPassword: updatedData.password,
+        }),
+      });
+
+      if (passwordResponse.ok) {
+        console.log("Senha alterada com sucesso!");
+      } else {
+        console.error("Erro ao alterar a senha:", await passwordResponse.json());
+      }
+    }
+  } catch (error) {
+    console.error("Erro na requisição:", error);
+  }
+
+  closeModal();
+});
+
+async function loadUserData() {
+  try {
+    const response = await fetch('http://localhost:8080/admin/me', {
+      mode: 'cors',
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'adminId': `${userId}`  
+      }
+    });
+
+    if (!response.ok) throw new Error("Erro ao buscar os dados do usuário.");
+
+    const userData = await response.json();
+    document.getElementById('name').value = userData.name || "";
+    document.getElementById('cnpj').value = userData.cnpj || "";
+    document.getElementById('email').value = userData.email || "";
+  } catch (error) {
+    console.error("Erro ao carregar os dados:", error.message);
+    alert("Não foi possível carregar os dados do usuário.");
+  }
 }
 
 function getUserFormData() {
-  return {
+  const data = {
     name: document.getElementById('name').value,
     cnpj: document.getElementById('cnpj').value,
     email: document.getElementById('email').value,
-    password: document.getElementById('password').value
   };
+
+  const password = document.getElementById('password').value;
+  if (password.trim()) {
+    data.password = password;
+  }
+
+  return data;
 }
 
 function closeModal() {

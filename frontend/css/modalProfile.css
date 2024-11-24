@@ -102,7 +102,6 @@ body.blurred .content {
     align-items: center;
 }
 
-/* Estilo padrão do input */
 .input-group input {
     flex: 1;
     padding: 10px;
@@ -115,13 +114,11 @@ body.blurred .content {
     box-sizing: border-box;
 }
 
-/* Ativar borda ao editar */
 .input-group input.editable {
     background-color: #2F2F2F;
     border: 1px solid #066839;
 }
 
-/* Estilo ao focar no campo */
 .input-group input.editable:focus {
     border-color: #066839;
     outline: none;
@@ -132,15 +129,13 @@ body.blurred .content {
     outline: none;
 }
 
-/* Estilo do ícone de edição */
 .input-group .edit-icon {
     margin-left: 10px;
     cursor: pointer;
-    font-size: 18px; /* Ajuste para um ícone visível */
+    font-size: 18px;
     transition: color 0.3s;
 }
 
-/* Botões */
 .form-actions {
     display: flex;
     justify-content: space-between;
@@ -158,64 +153,59 @@ body.blurred .content {
 
 .modal-actions {
     display: flex;
-    justify-content: flex-start; /* Alinha os botões à esquerda */
-    gap: 20px; /* Aumenta o espaçamento entre os botões */
+    justify-content: flex-start;
+    gap: 20px;
     margin-top: 20px;
-  }
+}
   
-  .modal-actions button {
+.modal-actions button {
     padding: 10px 20px;
     border-radius: 25px;
     font-family: "League Spartan", sans-serif;
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s, border 0.3s;
-  }
+}
   
-  /* Botão de salvar */
-  #saveChanges {
+#saveChanges {
     background-color: #066839;
     color: white;
     border: none;
-  }
+}
   
-  #saveChanges:hover {
+#saveChanges:hover {
     background-color: #055830;
-  }
+}
   
-  /* Container dos botões de logout e excluir conta */
-  .logout-delete {
+.logout-delete {
     display: flex;
-    gap: 10px; /* Espaçamento entre os botões */
-    margin-left: auto; /* Empurra a div para o lado direito */
-  }
+    gap: 10px;
+    margin-left: auto;
+}
   
-  /* Botão de logout */
-  #logout {
+#logout {
     background-color: transparent;
     color: white;
     border: 2px solid rgb(153, 18, 18);
-  }
+}
   
-  #logout:hover {
+#logout:hover {
     background-color: transparent;
-    color: rgb(243, 139, 139);
-    border-color: rgb(136, 13, 13)
-  }
-  
-  /* Botão de excluir conta */
-  #deleteAccount {
+    color: rgb(136, 13, 13);
+    border-color: rgb(136, 13, 13);
+}
+
+#deleteAccount {
     background-color: rgb(153, 18, 18);
     color: white;
     border: none;
-  }
+}
   
-  #deleteAccount:hover {
+#deleteAccount:hover {
     background-color: rgb(119, 9, 9);
-  }
+}
   
-  /* Efeitos de fechamento */
-  .hidden {
+.hidden {
     display: none;
-  }
+}
   

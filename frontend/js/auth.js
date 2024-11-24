@@ -10,7 +10,8 @@ async function login(cnpj, password) {
 
     if (response.ok) {
         const data = await response.json();
-        localStorage.setItem('jwtToken', data.token);
+        localStorage.setItem('jwtToken', data.accessToken);
+        localStorage.setItem('adminId', data.adminId);
         alert('Login bem-sucedido!');
         window.location.href = 'http://localhost/frontend/';
     } else {

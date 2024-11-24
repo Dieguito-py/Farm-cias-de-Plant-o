@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <link rel="stylesheet" href="css/styles.css" />
     <link rel="stylesheet" href="css/modalProfile.css" />
+    <link rel="stylesheet" href="css/modalParmacy.css" />
 </head>
 <body>
 
@@ -27,7 +28,7 @@
     <div id="profile-options" style="display: none;">
         <ul>
             <li><a class="openModal">Editar Perfil</a></li>
-            <li><a href="/gerenciar-farmacias">Gerenciar Farmácias</a></li>
+            <li><a id="managePharmacies" class="managePharmaciesBtn">Gerenciar Farmácias</a></li>
             <hr class="separator">
             <li><a href="javascript:void(0);" id="logout-button" class="logout">Logout</a></li>
         </ul>
@@ -63,7 +64,7 @@
         </div>
       </div>
       <div class="form-group">
-        <label for="password">Senha:</label>
+        <label for="password">Nova senha:</label>
         <div class="input-group">
           <input type="text" id="password" name="password" readonly required minlength="6">
           <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="password">
@@ -80,6 +81,90 @@
   </div>
 </div>
 
+<div id="managePharmaciesModal" class="modal modal-pharmacies hidden">
+  <div class="modal-content modal-pharmacies-content">
+    <div class="modal-header">
+      <h2 class="title">Gerenciar Farmácias</h2>
+      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalP">
+    </div>
+    <ul id="pharmaciesList" class="modal-list"></ul>
+    <div class="form-actions">
+      <button id="addPharmacy">Adicionar Farmácia</button>
+    </div>
+  </div>
+</div>
+
+<div id="addPharmacyModal" class="modal modal-add-pharmacy hidden">
+  <div class="modal-content modal-add-pharmacy-content">
+    <div class="modal-header">
+      <h2 class="title">Adicionar Nova Farmácia</h2>
+      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalC">
+    </div>
+    <form id="addPharmacyForm">
+      <label for="pharmacyName">Nome:</label>
+      <input type="text" id="pharmacyName" name="name" required>
+      <label for="pharmacyAddress">Endereço:</label>
+      <input type="text" id="pharmacyAddress" name="address" required>
+      <label for="pharmacyPhone">Telefone:</label>
+      <input type="tel" id="pharmacyPhone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pharmacyCity">Cidade:</label>
+          <input type="text" id="pharmacyCity" name="city" required>
+        </div>
+        <div class="form-group">
+          <label for="pharmacyState">Estado:</label>
+          <select id="pharmacyState" name="state" required>
+            <option value="" disabled selected>Selecione</option>
+            <option value="AC">AC</option>
+            <option value="AL">AL</option>
+            <option value="AP">AP</option>
+            <option value="AM">AM</option>
+            <option value="BA">BA</option>
+            <option value="CE">CE</option>
+            <option value="DF">DF</option>
+            <option value="ES">ES</option>
+            <option value="GO">GO</option>
+            <option value="MA">MA</option>
+            <option value="MT">MT</option>
+            <option value="MS">MS</option>
+            <option value="MG">MG</option>
+            <option value="PA">PA</option>
+            <option value="PB">PB</option>
+            <option value="PR">PR</option>
+            <option value="PE">PE</option>
+            <option value="PI">PI</option>
+            <option value="RJ">RJ</option>
+            <option value="RN">RN</option>
+            <option value="RS">RS</option>
+            <option value="RO">RO</option>
+            <option value="RR">RR</option>
+            <option value="SC">SC</option>
+            <option value="SP">SP</option>
+            <option value="SE">SE</option>
+            <option value="TO">TO</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="pharmacyLatitude">Latitude:</label>
+          <input type="number" id="pharmacyLatitude" name="latitude" step="any" required>
+        </div>
+        <div class="form-group">
+          <label for="pharmacyLongitude">Longitude:</label>
+          <input type="number" id="pharmacyLongitude" name="longitude" step="any" required>
+        </div>
+      </div>
+      <div class="form-actions">
+        <button type="submit">Salvar</button>
+        <button type="button" id="closeAddPharmacyModal">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
 <div id="sideMenu" class="league-spartan">
     <div id="top-space"></div>
 </div>
@@ -88,6 +173,7 @@
 
 <div id="map"></div>
 
+<script src="js/modalPharmacy.js"></script>
 <script src="js/modal.js"></script>
 <script type="module" src="js/PharmaciesMenu.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>

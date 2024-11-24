@@ -1,0 +1,158 @@
+/* Blurring effect */
+body.blurred .content {
+    filter: blur(90%);
+    pointer-events: none; 
+}
+
+/* Font styling */
+.league-spartan {
+    font-family: "League Spartan", sans-serif;
+    font-optical-sizing: auto;
+    font-weight: 400;
+    font-style: normal;
+}
+
+/* Modal for managing pharmacies */
+.modal-pharmacies .modal-content {
+    background: #2F2F2F;
+}
+
+.modal-pharmacies ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 4px;
+    background: #2F2F2F;
+}
+
+.modal-pharmacies ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-pharmacies ul li:last-child {
+    border-bottom: none;
+}
+
+.modal-pharmacies ul li:hover {
+    background-color: #414141;
+    border-top: 15px;
+}
+
+/* Modal for adding pharmacy */
+.modal-add-pharmacy .modal-content {
+    background: #2F2F2F;
+}
+
+.modal-add-pharmacy h2 {
+    color: #28a745;
+    font-size: 20px;
+    margin-bottom: 1px;
+}
+
+.modal-add-pharmacy .form-group label {
+    display: block;
+    margin: 10px 0 5px;
+    font-weight: bold;
+}
+
+.modal-add-pharmacy .form-group input {
+    width: 100%;
+    padding: 8px;
+    margin-top: 5px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.modal-add-pharmacy .form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-add-pharmacy .form-actions button {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-add-pharmacy .form-actions button[type="submit"] {
+    background-color: #28a745;
+    color: white;
+}
+
+.modal-add-pharmacy .form-actions button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.modal-add-pharmacy .form-actions button[type="button"] {
+    background-color: #ddd;
+    color: #333;
+}
+
+.modal-add-pharmacy .form-actions button[type="button"]:hover {
+    background-color: #ccc;
+}
+
+/* Pharmacy item styling */
+.pharmacy-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.pharmacy-text {
+    flex-grow: 1;
+}
+
+.pharmacy-actions {
+    display: flex;
+    align-items: center;
+}
+
+.edit-icon,
+.delete-icon {
+    width: 20px;
+    height: 20px;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.delete-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Add Pharmacy Button */
+#addPharmacy {
+    background-color: #066839;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 7px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+#addPharmacy:hover {
+    background-color: rgb(60, 145, 64);
+    transform: scale(1.01);
+}
+
+#addPharmacy:active {
+    background-color: #489c4b;
+    transform: scale(0.95);
+}
