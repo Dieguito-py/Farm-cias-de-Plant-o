@@ -11,8 +11,9 @@ import java.util.UUID;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminResponseDTO {
-    private String accessToken;
-    private Long expiresIn;
+public class AdminInfoResponseDTO {
     private UUID adminId;
+    private String name;
+    private String email;
+    private String cnpj;
 }

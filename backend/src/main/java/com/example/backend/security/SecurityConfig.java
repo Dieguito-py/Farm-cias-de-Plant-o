@@ -25,8 +25,10 @@ public class SecurityConfig {
                 .authorizeHttpRequests(
                         authorize -> authorize
                                 .requestMatchers("/admin/").permitAll()
-                                .requestMatchers("/pharmacy/").permitAll()
+                                .requestMatchers("/admin/me").permitAll()
+                                .requestMatchers("/admin/change-password").permitAll()
                                 .requestMatchers("/admin/auth/**").permitAll()
+                                .requestMatchers("/pharmacy/").permitAll()
                                 .requestMatchers("/auth/admin/").permitAll()
                                 .requestMatchers("/pharmacy/all").permitAll()
                                 .anyRequest().authenticated())

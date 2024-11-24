@@ -50,6 +50,7 @@ public class AuthAdminUseCase {
         return AdminResponseDTO.builder()
                 .accessToken(token)
                 .expiresIn(expiresIn.toEpochMilli())
+                .adminId(admin.getId())
                 .build();
     }
 }
