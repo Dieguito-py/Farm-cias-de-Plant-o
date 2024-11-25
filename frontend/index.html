@@ -94,25 +94,27 @@
   </div>
 </div>
 
-<div id="addPharmacyModal" class="modal modal-add-pharmacy hidden">
-  <div class="modal-content modal-add-pharmacy-content">
+<div id="addPharmacyModal" class="modal hidden">
+  <div class="modal-content">
     <div class="modal-header">
       <h2 class="title">Adicionar Nova Farmácia</h2>
-      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalC">
+      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
     </div>
     <form id="addPharmacyForm">
-      <label for="pharmacyName">Nome:</label>
-      <input type="text" id="pharmacyName" name="name" required>
-      <label for="pharmacyAddress">Endereço:</label>
-      <input type="text" id="pharmacyAddress" name="address" required>
-      <label for="pharmacyPhone">Telefone:</label>
-      <input type="tel" id="pharmacyPhone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+      <div class="form-groupF">
+        <label for="pharmacyName">Nome:</label>
+        <input type="text" id="pharmacyName" name="name" required>
+      </div>
+      <div class="form-groupF">
+        <label for="pharmacyAddress">Endereço:</label>
+        <input type="text" id="pharmacyAddress" name="address" required>
+      </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-groupF">
           <label for="pharmacyCity">Cidade:</label>
           <input type="text" id="pharmacyCity" name="city" required>
         </div>
-        <div class="form-group">
+        <div class="form-groupF">
           <label for="pharmacyState">Estado:</label>
           <select id="pharmacyState" name="state" required>
             <option value="" disabled selected>Selecione</option>
@@ -145,20 +147,23 @@
             <option value="TO">TO</option>
           </select>
         </div>
+        <div class="form-groupF">
+          <label for="pharmacyPhone">Telefone:</label>
+          <input type="tel" id="pharmacyPhone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+        </div>
       </div>
       <div class="form-row">
-        <div class="form-group">
+        <div class="form-groupF">
           <label for="pharmacyLatitude">Latitude:</label>
           <input type="number" id="pharmacyLatitude" name="latitude" step="any" required>
         </div>
-        <div class="form-group">
+        <div class="form-groupF">
           <label for="pharmacyLongitude">Longitude:</label>
           <input type="number" id="pharmacyLongitude" name="longitude" step="any" required>
         </div>
       </div>
       <div class="form-actions">
         <button type="submit">Salvar</button>
-        <button type="button" id="closeAddPharmacyModal">Cancelar</button>
       </div>
     </form>
   </div>
@@ -178,5 +183,10 @@
 <script type="module" src="js/PharmaciesMenu.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 <script src="js/main.js"></script>
+<script>
+  document.getElementById('addPharmacyForm').addEventListener('submit', (event) => {
+    event.preventDefault()
+  });
+</script>
 </body>
 </html>

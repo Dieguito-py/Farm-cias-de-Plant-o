@@ -1,7 +1,7 @@
 /* Blurring effect */
 body.blurred .content {
     filter: blur(90%);
-    pointer-events: none; 
+    pointer-events: none;
 }
 
 /* Font styling */
@@ -76,6 +76,40 @@ body.blurred .content {
     justify-content: flex-end;
     gap: 10px;
 }
+
+/* Estilo para agrupar campos lado a lado */
+.form-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.form-groupF {
+    flex: 1;
+    /* Ajusta o tamanho dos campos igualmente */
+}
+
+.form-groupF label {
+    display: block;
+    text-align: left;
+    margin-bottom: 5px;
+    margin-top: 6px;
+    font-weight: bold;
+    color: #fff;
+}
+
+.form-groupF input,
+.form-groupF select {
+    width: 100%;
+    padding: 10px;
+    background-color: #3d3d3d;
+    border-radius: 5px;
+    box-sizing: border-box;
+    border: 1px solid #3d3d3d;
+    color: #fff;
+    font-size: 12;
+}
+
 
 .modal-add-pharmacy .form-actions button {
     padding: 10px 15px;

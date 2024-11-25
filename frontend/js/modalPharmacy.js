@@ -91,7 +91,11 @@ function openEditPharmacyModal(pharmacyId) {
   if (pharmacy) {
     document.getElementById('pharmacyName').value = pharmacy.name;
     document.getElementById('pharmacyAddress').value = pharmacy.address;
-    document.getElementById('pharmacyCNPJ').value = pharmacy.cnpj;
+    document.getElementById('pharmacyCity').value = pharmacy.city;
+    document.getElementById('pharmacyState').value = pharmacy.state;
+    document.getElementById('pharmacyPhone').value = pharmacy.phone;
+    document.getElementById('pharmacyLatitude').value = pharmacy.latitude;
+    document.getElementById('pharmacyLongitude').value = pharmacy.longitude;
     addPharmacyModal.classList.remove('hidden');
   }
 }
@@ -123,11 +127,15 @@ addPharmacyForm.addEventListener('submit', async (event) => {
   const newPharmacy = {
     name: document.getElementById('pharmacyName').value,
     address: document.getElementById('pharmacyAddress').value,
-    cnpj: document.getElementById('pharmacyCNPJ').value
+    city: document.getElementById('pharmacyCity').value,
+    state: document.getElementById('pharmacyState').value,
+    phone: document.getElementById('pharmacyPhone').value,
+    latitude: document.getElementById('pharmacyLatitude').value,
+    longitude: document.getElementById('pharmacyLongitude').value
   };
 
   try {
-    const response = await fetch(`${apiBaseUrl}/usuarios/${userId}/farmacias`, {
+    const response = await fetch('http://localhost:8080/pharmacy/', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
