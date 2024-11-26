@@ -90,12 +90,14 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    const logoutButton = document.getElementById('logout-button');
+    const logoutButton = document.getElementById('logout-button', 'logout');
     if (logoutButton) {
         logoutButton.addEventListener('click', function () {
             logout();
         });
     }
+
+
 });
 
 function logout() {

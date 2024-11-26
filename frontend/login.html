@@ -58,7 +58,7 @@
                     <input type="text" id="signup-password" placeholder="Senha" required required minlength="6">
                 </div>
                 <button type="submit" class="submit-button">Sign up</button>
-        </div>
+        <div>
     </div>
 </div>
 <script src="js/cnpjFormatter.js"></script>
@@ -77,7 +77,7 @@
             const name = document.getElementById('signup-name').value;
             const cnpj = document.getElementById('signup-cnpj').value;
             const email = document.getElementById('signup-email').value;
-            const password = document.getElementById('login-password').value;
+            const password = document.getElementById('signup-password').value;
             signup(name, cnpj, email, password);
         });
 </script>

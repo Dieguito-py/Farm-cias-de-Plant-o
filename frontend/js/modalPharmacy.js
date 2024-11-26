@@ -7,25 +7,26 @@ const addPharmacyButton = document.getElementById('addPharmacy');
 const closeAddPharmacyModalButton = document.getElementById('closeModalC');
 const addPharmacyForm = document.getElementById('addPharmacyForm');
 const pharmaciesList = document.getElementById('pharmaciesList');
+const submitButton = document.querySelector('.submitt-button');
 
 managePharmaciesLink.addEventListener('click', async (event) => {
-    managePharmaciesModal.classList.remove('hidden');
-    body.classList.add('blurred');
-    await loadPharmacies();
+  managePharmaciesModal.classList.remove('hidden');
+  body.classList.add('blurred');
+  await loadPharmacies();
 });
 
 closeManagePharmaciesModalButton.addEventListener('click', closeModal);
 
 managePharmaciesModal.addEventListener('click', (event) => {
-    if (event.target === managePharmaciesModal) {
-        closeModal();
-    }
+  if (event.target === managePharmaciesModal) {
+    closeModal();
+  }
 });
 
 addPharmacyModal.addEventListener('click', (event) => {
-    if (event.target === addPharmacyModal) {
-        addPharmacyModal.classList.add('hidden');
-    }
+  if (event.target === addPharmacyModal) {
+    addPharmacyModal.classList.add('hidden');
+  }
 });
 
 // Abrir o modal de Adicionar Farmácia
@@ -67,17 +68,17 @@ async function loadPharmacies() {
 
     // Adicionar eventos para editar e deletar
     document.querySelectorAll('.edit-icon').forEach((icon) =>
-      icon.addEventListener('click', (event) => {
-        const pharmacyId = event.target.getAttribute('data-id');
-        openEditPharmacyModal(pharmacyId);
-      })
+        icon.addEventListener('click', (event) => {
+          const pharmacyId = event.target.getAttribute('data-id');
+          openEditPharmacyModal(pharmacyId);
+        })
     );
 
     document.querySelectorAll('.delete-icon').forEach((icon) =>
-      icon.addEventListener('click', (event) => {
-        const pharmacyId = event.target.getAttribute('data-id');
-        deletePharmacy(pharmacyId);
-      })
+        icon.addEventListener('click', (event) => {
+          const pharmacyId = event.target.getAttribute('data-id');
+          deletePharmacy(pharmacyId);
+        })
     );
   } catch (error) {
     console.error('Erro ao carregar farmácias:', error.message);
@@ -121,25 +122,26 @@ async function deletePharmacy(pharmacyId) {
 }
 
 // Função para adicionar uma nova farmácia
-addPharmacyForm.addEventListener('submit', async (event) => {
+submitButton.addEventListener('click', async (event) => {
   event.preventDefault();
 
   const newPharmacy = {
-    name: document.getElementById('pharmacyName').value,
-    address: document.getElementById('pharmacyAddress').value,
-    city: document.getElementById('pharmacyCity').value,
-    state: document.getElementById('pharmacyState').value,
-    phone: document.getElementById('pharmacyPhone').value,
-    latitude: document.getElementById('pharmacyLatitude').value,
-    longitude: document.getElementById('pharmacyLongitude').value
+    name: document.getElementById('pharmacyName').value.trim(),
+    address: document.getElementById('pharmacyAddress').value.trim(),
+    city: document.getElementById('pharmacyCity').value.trim(),
+    state: document.getElementById('pharmacyState').value.trim(),
+    phone: document.getElementById('pharmacyPhone').value.trim(),
+    latitude: document.getElementById('pharmacyLatitude').value.trim(),
+    longitude: document.getElementById('pharmacyLongitude').value.trim()
   };
 
   try {
     const response = await fetch('http://localhost:8080/pharmacy/', {
+      mode: 'cors',
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Passe o token de autenticação aqui
+        'Authorization': `Bearer ${token}`
       },
       body: JSON.stringify(newPharmacy)
     });
@@ -156,7 +158,6 @@ addPharmacyForm.addEventListener('submit', async (event) => {
 });
 
 function closeModal() {
-    managePharmaciesModal.classList.add('hidden');
-    body.classList.remove('blurred');
-  }
-  
+  managePharmaciesModal.classList.add('hidden');
+  body.classList.remove('blurred');
+}

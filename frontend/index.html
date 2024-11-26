@@ -163,12 +163,11 @@
         </div>
       </div>
       <div class="form-actions">
-        <button type="submit">Salvar</button>
+        <button type="submit" class="submitt-button">Salvar</button>
       </div>
     </form>
   </div>
 </div>
-
 
 <div id="sideMenu" class="league-spartan">
     <div id="top-space"></div>
@@ -179,6 +178,7 @@
 <div id="map"></div>
 
 <script src="js/modalPharmacy.js"></script>
+<script src="js/createPharmacy.js"></script>
 <script src="js/modal.js"></script>
 <script type="module" src="js/PharmaciesMenu.js"></script>
 <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
@@ -186,6 +186,14 @@
 <script>
   document.getElementById('addPharmacyForm').addEventListener('submit', (event) => {
     event.preventDefault()
+    const name = document.getElementById('pharmacyName').value
+    const address = document.getElementById('pharmacyAddress').value
+    const city = document.getElementById('pharmacyCity').value
+    const state = document.getElementById('pharmacyState').value
+    const phone = document.getElementById('pharmacyPhone').value
+    const latitude = document.getElementById('pharmacyLatitude').value
+    const longitude = document.getElementById('pharmacyLongitude').value
+    addPharmacy(name, address, city, state, phone, latitude, longitude)
   });
 </script>
 </body>
