@@ -2,10 +2,13 @@ package com.example.backend.modules.pharmacy.controller;
 
 import com.example.backend.modules.pharmacy.DTO.PharmacyDTO;
 import com.example.backend.modules.pharmacy.DTO.PharmacyResponseDTO;
+import com.example.backend.modules.pharmacy.DTO.ShiftResponseDTO;
 import com.example.backend.modules.pharmacy.entities.PharmacyEntity;
+import com.example.backend.modules.pharmacy.entities.ShiftEntity;
 import com.example.backend.modules.pharmacy.useCases.CreatePharmacyUseCase;
 import com.example.backend.modules.pharmacy.useCases.ListPharmaciesUseCase;
 import com.example.backend.modules.pharmacy.useCases.GetUserPharmaciesUseCase;
+import com.example.backend.modules.pharmacy.useCases.ListPharmacyShiftsUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,6 +32,10 @@ public class PharmacyController {
 
     @Autowired
     private GetUserPharmaciesUseCase getUserPharmaciesUseCase;
+
+    @Autowired
+    private ListPharmacyShiftsUseCase listPharmacyShiftsUseCase;
+
 
     @PostMapping("/")
     public PharmacyEntity create(@Valid @RequestBody PharmacyDTO jobDTO, HttpServletRequest request) {
@@ -61,6 +68,7 @@ public class PharmacyController {
             List<PharmacyEntity> pharmacies = getUserPharmaciesUseCase.execute(UUID.fromString(adminId));
             List<PharmacyResponseDTO> response = pharmacies.stream()
                     .map(pharmacy -> PharmacyResponseDTO.builder()
+                            .pharmacyId(pharmacy.getId())
                             .name(pharmacy.getName())
                             .address(pharmacy.getAddress())
                             .city(pharmacy.getCity())
@@ -74,5 +82,20 @@ public class PharmacyController {
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+    }
+
+    @GetMapping("/{pharmacyId}/shifts")
+    public ResponseEntity<List<ShiftResponseDTO>> listShifts(@PathVariable UUID pharmacyId) {
+        List<ShiftEntity> shifts = listPharmacyShiftsUseCase.execute(pharmacyId);
+        List<ShiftResponseDTO> response = shifts.stream()
+                .map(shift -> ShiftResponseDTO.builder()
+                        .id(shift.getId())
+                        .date(shift.getDate())
+                        .startTime(shift.getStartTime())
+                        .endTime(shift.getEndTime())
+                        .pharmacyId(shift.getPharmacy().getId())
+                        .build())
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(response);
     }
 }

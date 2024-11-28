@@ -32,6 +32,7 @@ public class SecurityConfig {
                                 .requestMatchers("/auth/admin/").permitAll()
                                 .requestMatchers("/pharmacy/all").permitAll()
                                 .requestMatchers("/pharmacy/user-pharmacies").permitAll()
+                                .requestMatchers("/{pharmacyId}/shifts").permitAll()
                                 .anyRequest().authenticated())
                 .addFilterBefore(securityFilter, BasicAuthenticationFilter.class)
                 .logout(logout -> logout

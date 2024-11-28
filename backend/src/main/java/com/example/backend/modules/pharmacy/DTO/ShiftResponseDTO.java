@@ -5,19 +5,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PharmacyResponseDTO {
+public class ShiftResponseDTO {
+    private UUID id;
+    private LocalDate date;
+    private LocalTime startTime;
+    private LocalTime endTime;
     private UUID pharmacyId;
-    private String name;
-    private String address;
-    private String city;
-    private String state;
-    private String phone;
-    private String latitude;
-    private String longitude;
 }
