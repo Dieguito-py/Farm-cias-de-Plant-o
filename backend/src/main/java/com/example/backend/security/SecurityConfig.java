@@ -28,7 +28,7 @@ public class SecurityConfig {
                                 .requestMatchers("/admin/me").permitAll()
                                 .requestMatchers("/admin/change-password").permitAll()
                                 .requestMatchers("/admin/auth/**").permitAll()
-                                .requestMatchers("/pharmacy/").permitAll()
+                                .requestMatchers("/pharmacy/**").permitAll()
                                 .requestMatchers("/auth/admin/").permitAll()
                                 .requestMatchers("/pharmacy/all").permitAll()
                                 .requestMatchers("/pharmacy/user-pharmacies").permitAll()

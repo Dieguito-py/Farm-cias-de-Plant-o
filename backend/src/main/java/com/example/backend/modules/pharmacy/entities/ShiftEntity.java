@@ -23,10 +23,13 @@ public class ShiftEntity {
     private LocalDate date;
 
     @NotNull(message = "Horário de início é obrigatório")
-    private LocalTime startTime;  // Alterado para LocalTime
+    private LocalTime startTime;
 
     @NotNull(message = "Horário de término é obrigatório")
-    private LocalTime endTime;  // Alterado para LocalTime
+    private LocalTime endTime;
+
+    @NotNull(message = "Frequência de recorrência é obrigatória")
+    private String recurrenceFrequency;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "pharmacy_id", nullable = false)

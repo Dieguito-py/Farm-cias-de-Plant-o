@@ -5,15 +5,13 @@ import com.example.backend.modules.pharmacy.DTO.PharmacyResponseDTO;
 import com.example.backend.modules.pharmacy.DTO.ShiftResponseDTO;
 import com.example.backend.modules.pharmacy.entities.PharmacyEntity;
 import com.example.backend.modules.pharmacy.entities.ShiftEntity;
-import com.example.backend.modules.pharmacy.useCases.CreatePharmacyUseCase;
-import com.example.backend.modules.pharmacy.useCases.ListPharmaciesUseCase;
-import com.example.backend.modules.pharmacy.useCases.GetUserPharmaciesUseCase;
-import com.example.backend.modules.pharmacy.useCases.ListPharmacyShiftsUseCase;
+import com.example.backend.modules.pharmacy.useCases.*;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -35,6 +33,9 @@ public class PharmacyController {
 
     @Autowired
     private ListPharmacyShiftsUseCase listPharmacyShiftsUseCase;
+
+    @Autowired
+    private CreateShiftUseCase createShiftUseCase;
 
 
     @PostMapping("/")
@@ -98,4 +99,18 @@ public class PharmacyController {
                 .collect(Collectors.toList());
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/shifts")
+    public ResponseEntity<List<ShiftEntity>> createShifts(
+            @RequestHeader("pharmacyId") UUID pharmacyId,
+            @RequestHeader("token") String token,
+            @Validated @RequestBody List<ShiftEntity> shiftEntities) {
+        for (ShiftEntity shiftEntity : shiftEntities) {
+            shiftEntity.setPharmacy(new PharmacyEntity());
+            shiftEntity.getPharmacy().setId(pharmacyId);
+            createShiftUseCase.execute(shiftEntity);
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(shiftEntities);
+    }
+
 }

@@ -12,6 +12,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PharmacyResponseDTO {
+    private UUID id;
     private UUID pharmacyId;
     private String name;
     private String address;

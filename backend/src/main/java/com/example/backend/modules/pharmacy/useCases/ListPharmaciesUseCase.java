@@ -19,6 +19,7 @@ public class ListPharmaciesUseCase {
         List<PharmacyEntity> pharmacies = pharmacyRepository.findAll();
         return pharmacies.stream().map(pharmacy -> {
             PharmacyResponseDTO dto = new PharmacyResponseDTO();
+            dto.setId(pharmacy.getId());
             dto.setName(pharmacy.getName());
             dto.setAddress(pharmacy.getAddress());
             dto.setCity(pharmacy.getCity());
