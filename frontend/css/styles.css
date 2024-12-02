@@ -236,7 +236,7 @@ body, html {
     border-radius: 5px;
     background-color: #424242;
     cursor: ew-resize;
-    z-index: 1000;
+    z-index: 999;
 }
 
 #sideMenu.hidden {

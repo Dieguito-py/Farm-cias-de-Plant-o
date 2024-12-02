@@ -1,4 +1,3 @@
-// Elementos do modal
 const managePharmaciesLink = document.getElementById('managePharmacies');
 const managePharmaciesModal = document.getElementById('managePharmaciesModal');
 const addPharmacyModal = document.getElementById('addPharmacyModal');
@@ -29,23 +28,20 @@ addPharmacyModal.addEventListener('click', (event) => {
   }
 });
 
-// Abrir o modal de Adicionar Farmácia
 addPharmacyButton.addEventListener('click', () => {
   addPharmacyModal.classList.remove('hidden');
 });
 
-// Fechar o modal de Adicionar Farmácia
 closeAddPharmacyModalButton.addEventListener('click', () => {
   addPharmacyModal.classList.add('hidden');
 });
 
-// Função para carregar a lista de farmácias do backend
 async function loadPharmacies() {
   try {
     const response = await fetch('http://localhost:8080/pharmacy/user-pharmacies', {
       headers: {
         'method': 'GET',
-        'adminId': userId // use a variável userId ou substitua por uma maneira de capturar o ID do usuário logado
+        'adminId': userId
       }
     });
 
@@ -53,7 +49,6 @@ async function loadPharmacies() {
 
     const pharmacies = await response.json();
 
-    // Limpar a lista e adicionar as farmácias
     pharmaciesList.innerHTML = '';
     pharmacies.forEach((pharmacy) => {
       const li = document.createElement('li');
@@ -66,19 +61,19 @@ async function loadPharmacies() {
       pharmaciesList.appendChild(li);
     });
 
-    // Adicionar eventos para editar e deletar
+
     document.querySelectorAll('.edit-icon').forEach((icon) =>
-        icon.addEventListener('click', (event) => {
-          const pharmacyId = event.target.getAttribute('data-id');
-          openEditPharmacyModal(pharmacyId);
-        })
+      icon.addEventListener('click', (event) => {
+        const pharmacyId = event.target.getAttribute('data-id');
+        openEditPharmacyModal(pharmacyId);
+      })
     );
 
     document.querySelectorAll('.delete-icon').forEach((icon) =>
-        icon.addEventListener('click', (event) => {
-          const pharmacyId = event.target.getAttribute('data-id');
-          deletePharmacy(pharmacyId);
-        })
+      icon.addEventListener('click', (event) => {
+        const pharmacyId = event.target.getAttribute('data-id');
+        deletePharmacy(pharmacyId);
+      })
     );
   } catch (error) {
     console.error('Erro ao carregar farmácias:', error.message);
@@ -86,7 +81,6 @@ async function loadPharmacies() {
   }
 }
 
-// Função para abrir o modal de edição com dados da farmácia
 function openEditPharmacyModal(pharmacyId) {
   const pharmacy = pharmacies.find((p) => p.id === Number(pharmacyId));
   if (pharmacy) {
@@ -101,27 +95,25 @@ function openEditPharmacyModal(pharmacyId) {
   }
 }
 
-// Função para deletar farmácia
 async function deletePharmacy(pharmacyId) {
   try {
     const response = await fetch(`http://localhost:8080/pharmacy/${pharmacyId}`, {
       method: 'DELETE',
       headers: {
-        'Authorization': `Bearer ${token}` // Passe o token de autenticação aqui
+        'Authorization': `Bearer ${token}`
       }
     });
 
     if (!response.ok) throw new Error('Erro ao deletar a farmácia.');
 
     alert('Farmácia deletada com sucesso!');
-    await loadPharmacies(); // Atualizar a lista
+    await loadPharmacies();
   } catch (error) {
     console.error('Erro ao deletar farmácia:', error.message);
     alert('Não foi possível deletar a farmácia.');
   }
 }
 
-// Função para adicionar uma nova farmácia
 submitButton.addEventListener('click', async (event) => {
   event.preventDefault();
 
@@ -150,7 +142,7 @@ submitButton.addEventListener('click', async (event) => {
 
     alert('Farmácia adicionada com sucesso!');
     addPharmacyModal.classList.add('hidden');
-    await loadPharmacies(); // Atualizar a lista de farmácias
+    await loadPharmacies();
   } catch (error) {
     console.error('Erro ao adicionar farmácia:', error.message);
     alert('Não foi possível adicionar a farmácia.');

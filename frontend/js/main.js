@@ -90,7 +90,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    const logoutButton = document.getElementById('logout-button', 'logout');
+    const logoutButton = document.getElementById('logout-button');
     if (logoutButton) {
         logoutButton.addEventListener('click', function () {
             logout();

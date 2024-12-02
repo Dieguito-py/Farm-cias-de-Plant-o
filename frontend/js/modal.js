@@ -1,4 +1,4 @@
-const openModalButton = document.querySelector('.openModal');
+const openModalButtonn = document.querySelector('.openModal');
 const closeModalButton = document.getElementById('closeModal');
 const saveChangesButton = document.getElementById('saveChanges');
 const modal = document.getElementById('modal');
@@ -7,7 +7,7 @@ const body = document.body;
 const token = localStorage.getItem('jwtToken');
 const userId = localStorage.getItem('adminId');
 
-openModalButton.addEventListener('click', async () => {
+openModalButtonn.addEventListener('click', async () => {
   modal.classList.remove('hidden');
   body.classList.add('blurred');
   await loadUserData();

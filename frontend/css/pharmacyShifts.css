@@ -1,0 +1,281 @@
+.hidden {
+    display: none;
+}
+
+#calendar {
+    flex: 2;
+    min-width: 60%;
+    height: 400px;
+}
+
+#inputs {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+label {
+    font-weight: bold;
+}
+
+.createShiftModal .modal-content {
+    background: #2F2F2F;
+    margin: 50px auto;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 50%;
+    height: 60%;
+    gap: 20px;
+}
+
+.modal-layout {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#calendar {
+    flex: 2;
+    min-width: 60%;
+    height: 450px;
+    min-height: 60%;
+}
+
+@media (max-width: 768px) {
+    .modal-layout {
+        flex-direction: column;
+    }
+
+    #calendar,
+    #inputs {
+        min-width: 100%;
+    }
+}
+
+.evento-importante {
+    background-color: #dc3545 !important;
+    border: none !important;
+    color: white !important;
+    font-weight: bold;
+}
+
+.fc-toolbar-title {
+    font-size: 1.5rem;
+    color: #343a40;
+}
+
+.fc-button {
+    background-color: transparent !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 4px !important;
+}
+
+.fc-day-today {
+    background-color: #ffebcc !important;
+}
+
+.fc-day.has-shift {
+    background-color: #28a745 !important;
+    color: white;
+}
+
+.fc-day.fc-day-sun,
+.fc-day.fc-day-mon,
+.fc-day.fc-day-tue,
+.fc-day.fc-day-wed,
+.fc-day.fc-day-thu,
+.fc-day.fc-day-fri,
+.fc-day.fc-day-sat {
+    background-color: transparent !important;
+}
+
+.fc-day[data-date] {
+    background-color: transparent !important;
+}
+
+.fc-day.fc-day-event {
+    background-color: #28a745 !important;
+    color: white !important;
+    border-radius: 8px !important;
+}
+
+.fc-day {
+    border-radius: 8px !important;
+}
+
+.fc-toolbar-title {
+    color: white !important;
+}
+
+.fc-prev-button,
+.fc-next-button {
+    background-color: transparent !important;
+    color: white !important;
+}
+
+.fc .fc-col-header-cell-cushion {
+    color: white;
+    display: inline-block;
+    padding: 2px 4px;
+}
+
+.fc .fc-daygrid-day-number {
+    color: white;
+    padding: 4px;
+    position: relative;
+    z-index: 4;
+}
+
+.fc-event-time {
+    color: white;
+}
+
+.fc-direction-ltr .fc-timegrid-slot-label-frame {
+    text-align: right;
+    color: white;
+}
+
+.fc .fc-timegrid-axis-cushion,
+.fc .fc-timegrid-slot-label-cushion {
+    padding: 0px 4px;
+    color: white;
+}
+
+.fc-scroller {
+    scrollbar-width: thin;
+    scrollbar-color: #636363 #f0f0f0;
+}
+
+.fc-scroller::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-track {
+    background-color: #f0f0f0;
+    border-radius: 4px;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb {
+    background-color: #636363;
+    border-radius: 4px;
+    border: 2px solid #f0f0f0;
+}
+
+.fc-scroller::-webkit-scrollbar-thumb:hover {
+    background-color: #636363;
+}
+
+.fc-scroller::-webkit-scrollbar-vertical {
+    width: 8px;
+}
+
+.fc-scroller::-webkit-scrollbar-horizontal {
+    height: 8px;
+}
+
+.modal-pharmacies-shifts ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    max-height: 300px;
+    overflow-y: auto;
+    border-radius: 4px;
+    background: #2F2F2F;
+}
+
+.modal-pharmacies-shifts ul li {
+    padding: 10px;
+    border-bottom: 1px solid #ddd;
+    font-size: 20px;
+    color: #ffffff;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-pharmacies-shifts ul li:last-child {
+    border-bottom: none;
+}
+
+.modal-pharmacies-shifts ul li:hover {
+    background-color: #414141;
+    border-top: 15px;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+#inputsShifts {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 15px;
+    width: 28%;
+}
+
+#dateLabel,
+#starTimelabel,
+#endTimeLabel,
+#recurrenceLabel {
+    font-family: "League Spartan", sans-serif;
+    font-size: 14px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
+
+#selectedDateInput,
+#startTime,
+#endTime,
+#recurrence {
+    font-family: "League Spartan", sans-serif;
+    font-size: 14px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #fff;
+    box-sizing: border-box;
+    width: 100%;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+#selectedDateInput:focus,
+#startTime:focus,
+#endTime:focus,
+#recurrence:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+#selectedDateInput[readonly] {
+    background-color: #e9ecef;
+    color: #6c757d;
+}
+
+#saveShiftBtn {
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+    color: #fff;
+    background-color: #4CAF50;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#saveShiftBtn:hover {
+    background-color: #45a049;
+}

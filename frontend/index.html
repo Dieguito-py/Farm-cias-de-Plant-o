@@ -1,200 +1,253 @@
 <!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PlantOn</title>
-    <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
-    <link rel="stylesheet" href="css/styles.css" />
-    <link rel="stylesheet" href="css/modalProfile.css" />
-    <link rel="stylesheet" href="css/modalParmacy.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PlantOn</title>
+  <link href='https://unpkg.com/@fullcalendar/core@5.10.1/main.min.css' rel='stylesheet' />
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+  <link rel="stylesheet" href="css/styles.css" />
+  <link rel="stylesheet" href="css/modalProfile.css" />
+  <link rel="stylesheet" href="css/modalParmacy.css" />
+  <link rel="stylesheet" href="css/pharmacyShifts.css" />
 </head>
+
 <body>
 
-<button id="menuButton">
+  <button id="menuButton">
     <img src="assets/menu-icon.svg" alt="Menu Icon" width="24" height="24">
-</button>
+  </button>
 
-<div class="auth-buttons">
+  <div class="auth-buttons">
     <button class="btn-login" onclick="window.location.href='login.html'">Login</button>
     <button class="btn-signup" onclick="window.location.href='login.html'">Sign Up</button>
-</div>
+  </div>
 
-<div id="profile-menu" style="display: none;">
+  <div id="profile-menu" style="display: none;">
     <button id="profile-button">
-        <img src="assets/profile.png" alt="Profile" width="40" height="40">
+      <img src="assets/profile.png" alt="Profile" width="40" height="40">
     </button>
     <div id="profile-options" style="display: none;">
-        <ul>
-            <li><a class="openModal">Editar Perfil</a></li>
-            <li><a id="managePharmacies" class="managePharmaciesBtn">Gerenciar Farmácias</a></li>
-            <hr class="separator">
-            <li><a href="javascript:void(0);" id="logout-button" class="logout">Logout</a></li>
-        </ul>
+      <ul>
+        <li><a class="openModal">Editar Perfil</a></li>
+        <li><a id="managePharmacies" class="managePharmaciesBtn">Gerenciar Farmácias</a></li>
+        <li><a id="manageShifts" class="manageShiftsBtn">Gerenciar Plantões</a></li>
+        <hr class="separator">
+        <li><a href="javascript:void(0);" id="logout-button" class="logout">Logout</a></li>
+      </ul>
     </div>
-</div>
+  </div>
 
-<div id="modal" class="modal hidden">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="title">Editar Dados do Usuário</h2>
-      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
-    </div>
-    <form id="userForm">
-      <div class="form-group">
-        <label for="name">Nome:</label>
-        <div class="input-group">
-          <input type="text" id="name" name="name" readonly required>
-          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="name">
-        </div>
+  <div id="modal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="title">Editar Dados do Usuário</h2>
+        <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
       </div>
-      <div class="form-group">
-        <label for="cnpj">CNPJ:</label>
-        <div class="input-group">
-          <input type="text" id="cnpj" name="cnpj" readonly required maxlength="18">
-          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="cnpj">
+      <form id="userForm">
+        <div class="form-group">
+          <label for="name">Nome:</label>
+          <div class="input-group">
+            <input type="text" id="name" name="name" readonly required>
+            <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="name">
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="email">E-mail:</label>
-        <div class="input-group">
-          <input type="email" id="email" name="email" readonly required>
-          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="email">
+        <div class="form-group">
+          <label for="cnpj">CNPJ:</label>
+          <div class="input-group">
+            <input type="text" id="cnpj" name="cnpj" readonly required maxlength="18">
+            <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="cnpj">
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="password">Nova senha:</label>
-        <div class="input-group">
-          <input type="text" id="password" name="password" readonly required minlength="6">
-          <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="password">
+        <div class="form-group">
+          <label for="email">E-mail:</label>
+          <div class="input-group">
+            <input type="email" id="email" name="email" readonly required>
+            <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="email">
+          </div>
         </div>
-      </div>
-    </form>
-    <div class="modal-actions">
-      <button type="button" id="saveChanges">Salvar</button>
-      <div class="logout-delete">
-        <button type="button" id="logout">Logout</button>
-        <button type="button" id="deleteAccount">Excluir Conta</button>
+        <div class="form-group">
+          <label for="password">Nova senha:</label>
+          <div class="input-group">
+            <input type="text" id="password" name="password" readonly required minlength="6">
+            <img src="assets/edit.png" alt="Editar" class="edit-icon" data-field="password">
+          </div>
+        </div>
+      </form>
+      <div class="modal-actions">
+        <button type="button" id="saveChanges">Salvar</button>
+        <div class="logout-delete">
+          <button type="button" id="logout">Logout</button>
+          <button type="button" id="deleteAccount">Excluir Conta</button>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div id="managePharmaciesModal" class="modal modal-pharmacies hidden">
-  <div class="modal-content modal-pharmacies-content">
-    <div class="modal-header">
-      <h2 class="title">Gerenciar Farmácias</h2>
-      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalP">
-    </div>
-    <ul id="pharmaciesList" class="modal-list"></ul>
-    <div class="form-actions">
-      <button id="addPharmacy">Adicionar Farmácia</button>
-    </div>
-  </div>
-</div>
-
-<div id="addPharmacyModal" class="modal hidden">
-  <div class="modal-content">
-    <div class="modal-header">
-      <h2 class="title">Adicionar Nova Farmácia</h2>
-      <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
-    </div>
-    <form id="addPharmacyForm">
-      <div class="form-groupF">
-        <label for="pharmacyName">Nome:</label>
-        <input type="text" id="pharmacyName" name="name" required>
+  <div id="managePharmaciesModal" class="modal modal-pharmacies hidden">
+    <div class="modal-content modal-pharmacies-content">
+      <div class="modal-header">
+        <h2 class="title">Gerenciar Farmácias</h2>
+        <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalP">
       </div>
-      <div class="form-groupF">
-        <label for="pharmacyAddress">Endereço:</label>
-        <input type="text" id="pharmacyAddress" name="address" required>
-      </div>
-      <div class="form-row">
-        <div class="form-groupF">
-          <label for="pharmacyCity">Cidade:</label>
-          <input type="text" id="pharmacyCity" name="city" required>
-        </div>
-        <div class="form-groupF">
-          <label for="pharmacyState">Estado:</label>
-          <select id="pharmacyState" name="state" required>
-            <option value="" disabled selected>Selecione</option>
-            <option value="AC">AC</option>
-            <option value="AL">AL</option>
-            <option value="AP">AP</option>
-            <option value="AM">AM</option>
-            <option value="BA">BA</option>
-            <option value="CE">CE</option>
-            <option value="DF">DF</option>
-            <option value="ES">ES</option>
-            <option value="GO">GO</option>
-            <option value="MA">MA</option>
-            <option value="MT">MT</option>
-            <option value="MS">MS</option>
-            <option value="MG">MG</option>
-            <option value="PA">PA</option>
-            <option value="PB">PB</option>
-            <option value="PR">PR</option>
-            <option value="PE">PE</option>
-            <option value="PI">PI</option>
-            <option value="RJ">RJ</option>
-            <option value="RN">RN</option>
-            <option value="RS">RS</option>
-            <option value="RO">RO</option>
-            <option value="RR">RR</option>
-            <option value="SC">SC</option>
-            <option value="SP">SP</option>
-            <option value="SE">SE</option>
-            <option value="TO">TO</option>
-          </select>
-        </div>
-        <div class="form-groupF">
-          <label for="pharmacyPhone">Telefone:</label>
-          <input type="tel" id="pharmacyPhone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
-        </div>
-      </div>
-      <div class="form-row">
-        <div class="form-groupF">
-          <label for="pharmacyLatitude">Latitude:</label>
-          <input type="number" id="pharmacyLatitude" name="latitude" step="any" required>
-        </div>
-        <div class="form-groupF">
-          <label for="pharmacyLongitude">Longitude:</label>
-          <input type="number" id="pharmacyLongitude" name="longitude" step="any" required>
-        </div>
-      </div>
+      <ul id="pharmaciesList" class="modal-list"></ul>
       <div class="form-actions">
-        <button type="submit" class="submitt-button">Salvar</button>
+        <button id="addPharmacy">Adicionar Farmácia</button>
       </div>
-    </form>
+    </div>
   </div>
-</div>
 
-<div id="sideMenu" class="league-spartan">
+  <div id="addPharmacyModal" class="modal hidden">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="title">Adicionar Nova Farmácia</h2>
+        <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModal">
+      </div>
+      <form id="addPharmacyForm">
+        <div class="form-groupF">
+          <label for="pharmacyName">Nome:</label>
+          <input type="text" id="pharmacyName" name="name" required>
+        </div>
+        <div class="form-groupF">
+          <label for="pharmacyAddress">Endereço:</label>
+          <input type="text" id="pharmacyAddress" name="address" required>
+        </div>
+        <div class="form-row">
+          <div class="form-groupF">
+            <label for="pharmacyCity">Cidade:</label>
+            <input type="text" id="pharmacyCity" name="city" required>
+          </div>
+          <div class="form-groupF">
+            <label for="pharmacyState">Estado:</label>
+            <select id="pharmacyState" name="state" required>
+              <option value="" disabled selected>Selecione</option>
+              <option value="AC">AC</option>
+              <option value="AL">AL</option>
+              <option value="AP">AP</option>
+              <option value="AM">AM</option>
+              <option value="BA">BA</option>
+              <option value="CE">CE</option>
+              <option value="DF">DF</option>
+              <option value="ES">ES</option>
+              <option value="GO">GO</option>
+              <option value="MA">MA</option>
+              <option value="MT">MT</option>
+              <option value="MS">MS</option>
+              <option value="MG">MG</option>
+              <option value="PA">PA</option>
+              <option value="PB">PB</option>
+              <option value="PR">PR</option>
+              <option value="PE">PE</option>
+              <option value="PI">PI</option>
+              <option value="RJ">RJ</option>
+              <option value="RN">RN</option>
+              <option value="RS">RS</option>
+              <option value="RO">RO</option>
+              <option value="RR">RR</option>
+              <option value="SC">SC</option>
+              <option value="SP">SP</option>
+              <option value="SE">SE</option>
+              <option value="TO">TO</option>
+            </select>
+          </div>
+          <div class="form-groupF">
+            <label for="pharmacyPhone">Telefone:</label>
+            <input type="tel" id="pharmacyPhone" name="phone" placeholder="(XX) XXXXX-XXXX" required>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-groupF">
+            <label for="pharmacyLatitude">Latitude:</label>
+            <input type="number" id="pharmacyLatitude" name="latitude" step="any" required>
+          </div>
+          <div class="form-groupF">
+            <label for="pharmacyLongitude">Longitude:</label>
+            <input type="number" id="pharmacyLongitude" name="longitude" step="any" required>
+          </div>
+        </div>
+        <div class="form-actions">
+          <button type="submit" class="submitt-button">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="managePharmaciesShiftsModal" class="modal modal-pharmacies-shifts hidden">
+    <div class="modal-content modal-pharmacies-shifts-content">
+      <div class="modal-header">
+        <h2 class="title">Gerenciar Plantões</h2>
+        <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeModalIcon">
+      </div>
+      <ul id="pharmaciesListShifts" class="modal-list"></ul>
+      <div class="form-actions">
+      </div>
+    </div>
+  </div>
+
+  <div id="createShiftModal" class="modal createShiftModal hidden">
+    <div class="modal-content createShiftModal-content">
+      <div class="modal-header">
+        <h2 id="createShiftTitle" class="title">Criar Plantão</h2>
+        <img src="assets/close.png" alt="Fechar" class="close-icon" id="closeCreateShiftModal">
+      </div>
+      <div id="modalBody" class="modal-layout">
+        <div id="calendar"></div>
+        <div id="inputsShifts">
+          <label id="dateLabel" for="selectedDateInput">Data:</label>
+          <input type="text" id="selectedDateInput" placeholder="Selecione um dia" readonly>
+
+          <label id="starTimelabel" for="startTime">Hora de início:</label>
+          <input type="time" id="startTime">
+
+          <label id="endTimeLabel" for="endTime">Hora de término:</label>
+          <input type="time" id="endTime">
+
+          <label id="recurrenceLabel" for="recurrence">Recorrência:</label>
+          <select id="recurrence">
+            <option value="none">Nenhuma</option>
+            <option value="daily">Diária</option>
+            <option value="weekly">Semanal</option>
+            <option value="weekends">Mensal</option>
+          </select>
+
+          <button id="saveShiftBtn">Salvar Plantão</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="sideMenu" class="league-spartan">
     <div id="top-space"></div>
-</div>
+  </div>
 
-<div id="resizeBar"></div>
+  <div id="resizeBar"></div>
 
-<div id="map"></div>
-
-<script src="js/modalPharmacy.js"></script>
-<script src="js/createPharmacy.js"></script>
-<script src="js/modal.js"></script>
-<script type="module" src="js/PharmaciesMenu.js"></script>
-<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-<script src="js/main.js"></script>
-<script>
-  document.getElementById('addPharmacyForm').addEventListener('submit', (event) => {
-    event.preventDefault()
-    const name = document.getElementById('pharmacyName').value
-    const address = document.getElementById('pharmacyAddress').value
-    const city = document.getElementById('pharmacyCity').value
-    const state = document.getElementById('pharmacyState').value
-    const phone = document.getElementById('pharmacyPhone').value
-    const latitude = document.getElementById('pharmacyLatitude').value
-    const longitude = document.getElementById('pharmacyLongitude').value
-    addPharmacy(name, address, city, state, phone, latitude, longitude)
-  });
-</script>
+  <div id="map"></div>
+  <script src="js/pharmacyShifts.js"></script>
+  <script src="js/modalPharmacy.js"></script>
+  <script src="js/createPharmacy.js"></script>
+  <script src="js/modal.js"></script>
+  <script type="module" src="js/PharmaciesMenu.js"></script>
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+  <!-- <script src="https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.8/index.global.min.js"></script> -->
+  <script src="js/main.js"></script>
+  <script>
+    document.getElementById('addPharmacyForm').addEventListener('submit', (event) => {
+      event.preventDefault()
+      const name = document.getElementById('pharmacyName').value
+      const address = document.getElementById('pharmacyAddress').value
+      const city = document.getElementById('pharmacyCity').value
+      const state = document.getElementById('pharmacyState').value
+      const phone = document.getElementById('pharmacyPhone').value
+      const latitude = document.getElementById('pharmacyLatitude').value
+      const longitude = document.getElementById('pharmacyLongitude').value
+      addPharmacy(name, address, city, state, phone, latitude, longitude)
+    });
+  </script>
 </body>
+
 </html>

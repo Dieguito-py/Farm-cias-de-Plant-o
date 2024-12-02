@@ -1,10 +1,8 @@
-/* Blurring effect */
 body.blurred .content {
     filter: blur(90%);
     pointer-events: none;
 }
 
-/* Font styling */
 .league-spartan {
     font-family: "League Spartan", sans-serif;
     font-optical-sizing: auto;
@@ -12,7 +10,6 @@ body.blurred .content {
     font-style: normal;
 }
 
-/* Modal for managing pharmacies */
 .modal-pharmacies .modal-content {
     background: #2F2F2F;
 }
@@ -45,7 +42,6 @@ body.blurred .content {
     border-top: 15px;
 }
 
-/* Modal for adding pharmacy */
 .modal-add-pharmacy .modal-content {
     background: #2F2F2F;
 }
@@ -77,7 +73,6 @@ body.blurred .content {
     gap: 10px;
 }
 
-/* Estilo para agrupar campos lado a lado */
 .form-row {
     display: flex;
     justify-content: space-between;
@@ -86,7 +81,6 @@ body.blurred .content {
 
 .form-groupF {
     flex: 1;
-    /* Ajusta o tamanho dos campos igualmente */
 }
 
 .form-groupF label {
@@ -137,7 +131,6 @@ body.blurred .content {
     background-color: #ccc;
 }
 
-/* Pharmacy item styling */
 .pharmacy-item {
     display: flex;
     justify-content: space-between;
@@ -168,7 +161,6 @@ body.blurred .content {
     height: 24px;
 }
 
-/* Add Pharmacy Button */
 #addPharmacy {
     background-color: #066839;
     color: white;
