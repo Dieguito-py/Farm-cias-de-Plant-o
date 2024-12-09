@@ -8,6 +8,32 @@
     height: 400px;
 }
 
+#dateNavigation {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: Arial, sans-serif;
+    font-size: 16px;
+}
+
+#currentDate {
+    text-align: center;
+    margin: 0 20px;
+}
+
+.nav-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+}
+
+#currentDate div {
+    margin: 5px 0;
+}
+
+
 #inputs {
     flex: 1;
     display: flex;

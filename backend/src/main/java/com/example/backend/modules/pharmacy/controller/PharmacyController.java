@@ -2,6 +2,7 @@ package com.example.backend.modules.pharmacy.controller;
 
 import com.example.backend.modules.pharmacy.DTO.PharmacyDTO;
 import com.example.backend.modules.pharmacy.DTO.PharmacyResponseDTO;
+import com.example.backend.modules.pharmacy.DTO.PharmacyShiftResponseDTO;
 import com.example.backend.modules.pharmacy.DTO.ShiftResponseDTO;
 import com.example.backend.modules.pharmacy.entities.PharmacyEntity;
 import com.example.backend.modules.pharmacy.entities.ShiftEntity;
@@ -14,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -37,6 +39,8 @@ public class PharmacyController {
     @Autowired
     private CreateShiftUseCase createShiftUseCase;
 
+    @Autowired
+    private ListPharmaciesOnDutyUseCase listPharmaciesOnDutyUseCase;
 
     @PostMapping("/")
     public PharmacyEntity create(@Valid @RequestBody PharmacyDTO jobDTO, HttpServletRequest request) {
@@ -111,6 +115,12 @@ public class PharmacyController {
             createShiftUseCase.execute(shiftEntity);
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(shiftEntities);
+    }
+
+    @GetMapping("/on-duty")
+    public ResponseEntity<List<PharmacyShiftResponseDTO>> listPharmaciesOnDuty(@RequestParam("date") LocalDate date) {
+        List<PharmacyShiftResponseDTO> pharmacies = listPharmaciesOnDutyUseCase.execute(date);
+        return ResponseEntity.ok(pharmacies);
     }
 
 }

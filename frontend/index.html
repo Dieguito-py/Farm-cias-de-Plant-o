@@ -8,6 +8,11 @@
   <link href='https://unpkg.com/@fullcalendar/core@5.10.1/main.min.css' rel='stylesheet' />
   <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=League+Spartan:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.css" />
+  <script
+    src="https://cdnjs.cloudflare.com/ajax/libs/leaflet-routing-machine/3.2.12/leaflet-routing-machine.min.js"></script>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
   <link rel="stylesheet" href="css/styles.css" />
   <link rel="stylesheet" href="css/modalProfile.css" />
@@ -16,11 +21,6 @@
 </head>
 
 <body>
-
-  <button id="menuButton">
-    <img src="assets/menu-icon.svg" alt="Menu Icon" width="24" height="24">
-  </button>
-
   <div class="auth-buttons">
     <button class="btn-login" onclick="window.location.href='login.html'">Login</button>
     <button class="btn-signup" onclick="window.location.href='login.html'">Sign Up</button>
@@ -219,8 +219,20 @@
     </div>
   </div>
 
+  <button id="menuButton">
+    <img src="assets/menu-icon.svg" alt="Menu Icon" width="24" height="24">
+  </button>
+
   <div id="sideMenu" class="league-spartan">
-    <div id="top-space"></div>
+    <div id="dateNavigation">
+      <button id="prevDay" class="nav-btn">&#10094;</button>
+      <div id="currentDate">
+        <div id="dayOfWeek"></div>
+        <div id="fullDate"></div>
+      </div>
+      <button id="nextDay" class="nav-btn">&#10095;</button>
+    </div>
+    <div id="pharmaciesMenu"></div>
   </div>
 
   <div id="resizeBar"></div>
