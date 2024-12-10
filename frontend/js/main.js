@@ -1,7 +1,9 @@
+let map;
 document.addEventListener('DOMContentLoaded', function () {
     var map = L.map('map', {
         zoomControl: false,
-        attributionControl: false
+        attributionControl: false,
+        minZoom: 6,
     }).setView([-26.867164753064678, -52.418200803351624], 12);
 
     // Adicionar o tile layer
@@ -11,67 +13,111 @@ document.addEventListener('DOMContentLoaded', function () {
     }).addTo(map);
 
     let routingControl = null; // Controle da rota atual
+    let routeLine = null; // Linha simples conectando o trajeto
+
+    const defaultLocation = { lat: -26.867164753064678, lng: -52.418200803351624 }; // Localização padrão
 
     // Função para adicionar um marcador no mapa
-    function addPin(latitude, longitude, pharmacy) {
+    function addPin(latitude, longitude, pharmacy, isUser = false) {
+        const iconUrl = isUser ? 'assets/pin.png' : 'assets/pin.png';
         const customIcon = L.icon({
-            iconUrl: 'assets/pin.png', // Caminho do ícone do pin
+            iconUrl: iconUrl,
             iconSize: [32, 39],
             iconAnchor: [16, 32],
             popupAnchor: [0, -32]
         });
 
+        window.addPin = addPin;
+
         const marker = L.marker([latitude, longitude], { icon: customIcon })
-            .addTo(map)
-            .bindPopup(`
-                <b>${pharmacy.name}</b><br>
-                ${pharmacy.address}, ${pharmacy.city} - ${pharmacy.state}<br>
-                Telefone: ${pharmacy.phone}<br>
-                Plantão: ${pharmacy.startTime} - ${pharmacy.endTime}<br>
+            .addTo(map);
+
+        if (!isUser) {
+            marker.bindPopup(`
                 <button class="route-button" data-lat="${latitude}" data-lng="${longitude}">Traçar Rota</button>
             `);
 
-        marker.on('popupopen', () => {
-            document.querySelector('.route-button').addEventListener('click', (event) => {
-                const destLat = parseFloat(event.target.dataset.lat);
-                const destLng = parseFloat(event.target.dataset.lng);
+            marker.on('popupopen', () => {
+                document.querySelector('.route-button').addEventListener('click', (event) => {
+                    const destLat = parseFloat(event.target.dataset.lat);
+                    const destLng = parseFloat(event.target.dataset.lng);
 
-                if (navigator.geolocation) {
-                    navigator.geolocation.getCurrentPosition(
-                        (position) => {
-                            const userLat = position.coords.latitude;
-                            const userLng = position.coords.longitude;
-
-                            // Remove a rota anterior, se houver
-                            if (routingControl) {
-                                map.removeControl(routingControl);
-                            }
-
-                            // Adiciona a nova rota
-                            routingControl = L.Routing.control({
-                                waypoints: [
-                                    L.latLng(userLat, userLng),
-                                    L.latLng(destLat, destLng)
-                                ],
-                                routeWhileDragging: true,
-                                createMarker: function () { return null; } // Remove os marcadores padrão
-                            }).addTo(map);
-                        },
-                        () => {
-                            alert('Não foi possível obter sua localização.');
-                        }
-                    );
-                } else {
-                    alert('Seu navegador não suporta geolocalização.');
-                }
+                    traceRoute(destLat, destLng);
+                });
             });
-        });
+        }
+
+        return marker;
     }
+
+    // Função para buscar a localização do usuário
+    function getUserLocation() {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    // Adiciona marcador para a localização do usuário
+                    addPin(userLat, userLng, null, true);
+
+                    // Centraliza o mapa na localização do usuário
+                    map.setView([userLat, userLng], 14);
+                },
+                () => {
+                    console.warn('Não foi possível obter a localização do usuário. Usando localização padrão.');
+                    useDefaultLocation();
+                }
+            );
+        } else {
+            console.warn('Geolocalização não suportada. Usando localização padrão.');
+            useDefaultLocation();
+        }
+    }
+
+    // Função para usar localização padrão
+    function useDefaultLocation() {
+        addPin(defaultLocation.lat, defaultLocation.lng, null, true);
+        map.setView([defaultLocation.lat, defaultLocation.lng], 12);
+    }
+
+    function traceRoute(destLat, destLng) {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    const userLat = position.coords.latitude;
+                    const userLng = position.coords.longitude;
+
+                    // Adicionar rota ao mapa (assumindo que `map` é global)
+                    if (routingControl) {
+                        map.removeControl(routingControl); // Remove rota anterior
+                    }
+                    routingControl = L.Routing.control({
+                        waypoints: [
+                            L.latLng(userLat, userLng),
+                            L.latLng(destLat, destLng)
+                        ],
+                        routeWhileDragging: true,
+                        createMarker: function () { return null; } // Sem marcadores de rota
+                    }).addTo(map);
+
+                    // Ajustar o zoom para incluir toda a rota
+                    map.fitBounds([[userLat, userLng], [destLat, destLng]], { padding: [50, 50] });
+                },
+                (error) => {
+                    alert('Não foi possível obter sua localização: ' + error.message);
+                }
+            );
+        } else {
+            alert('Seu navegador não suporta geolocalização.');
+        }
+    }
+
 
     // Função para buscar os plantões do dia
     async function fetchShifts() {
         try {
-            const selectedDate = new Date(); // Data atual
+            const selectedDate = new Date();
             const formattedDate = selectedDate.toISOString().split('T')[0];
 
             const response = await fetch(`http://localhost:8080/pharmacy/on-duty?date=${formattedDate}`, {
@@ -85,7 +131,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             const shifts = await response.json();
 
-            // Adiciona um pin para cada farmácia
+            // Adiciona marcadores das farmácias em plantão
             shifts.forEach(shift => {
                 addPin(shift.latitude, shift.longitude, shift);
             });
@@ -95,9 +141,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Inicializa a busca dos plantões
+    // Inicializa a busca dos plantões e localização do usuário
     fetchShifts();
+    getUserLocation();
 });
+
 
 const menuButton = document.getElementById('menuButton');
 const sideMenu = document.getElementById('sideMenu');
