@@ -1,56 +1,65 @@
-let map;
 document.addEventListener('DOMContentLoaded', function () {
-    var map = L.map('map', {
+    const DEFAULT_LOCATION = {
+        latitude: -26.87152490517185,
+        longitude: -52.408455623841206,
+    };
+
+    let map = L.map('map', {
         zoomControl: false,
         attributionControl: false,
         minZoom: 6,
-    }).setView([-26.867164753064678, -52.418200803351624], 12);
+    }).setView([DEFAULT_LOCATION.latitude, DEFAULT_LOCATION.longitude], 12);
 
-    // Adicionar o tile layer
     L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 19,
         subdomains: 'abcd',
     }).addTo(map);
 
-    let routingControl = null; // Controle da rota atual
-    let routeLine = null; // Linha simples conectando o trajeto
+    let userLocationMarker = null;
+    let markersLayer = L.layerGroup().addTo(map);
 
-    const defaultLocation = { lat: -26.867164753064678, lng: -52.418200803351624 }; // Localização padrão
+    let routingControl = null;
 
-    // Função para adicionar um marcador no mapa
-    function addPin(latitude, longitude, pharmacy, isUser = false) {
-        const iconUrl = isUser ? 'assets/pin.png' : 'assets/pin.png';
+    function addPin(latitude, longitude, iconUrl) {
         const customIcon = L.icon({
             iconUrl: iconUrl,
             iconSize: [32, 39],
             iconAnchor: [16, 32],
-            popupAnchor: [0, -32]
+            popupAnchor: [0, -32],
         });
 
-        window.addPin = addPin;
-
-        const marker = L.marker([latitude, longitude], { icon: customIcon })
-            .addTo(map);
-
-        if (!isUser) {
-            marker.bindPopup(`
-                <button class="route-button" data-lat="${latitude}" data-lng="${longitude}">Traçar Rota</button>
-            `);
-
-            marker.on('popupopen', () => {
-                document.querySelector('.route-button').addEventListener('click', (event) => {
-                    const destLat = parseFloat(event.target.dataset.lat);
-                    const destLng = parseFloat(event.target.dataset.lng);
-
-                    traceRoute(destLat, destLng);
-                });
-            });
-        }
-
+        const marker = L.marker([latitude, longitude], { icon: customIcon }).addTo(map);
+        marker.on('click', () => {
+            if (userLocationMarker) {
+                const userLatLng = userLocationMarker.getLatLng();
+                drawRoute(userLatLng, [latitude, longitude]);
+            } else {
+                alert('Localização do usuário não encontrada.');
+            }
+        });
         return marker;
     }
 
-    // Função para buscar a localização do usuário
+    function drawRoute(start, end) {
+        if (routingControl) {
+            map.removeControl(routingControl);
+        }
+
+        routingControl = L.Routing.control({
+            waypoints: [
+                L.latLng(start.lat, start.lng),
+                L.latLng(end[0], end[1]),
+            ],
+            routeWhileDragging: true,
+            createMarker: function () { return null; },
+            lineOptions: {
+                styles: [{ color: 'green', weight: 5, opacity: 0.7 }]
+            },
+            show: false,
+            
+        }).addTo(map);
+    }
+
     function getUserLocation() {
         if (navigator.geolocation) {
             navigator.geolocation.getCurrentPosition(
@@ -58,82 +67,54 @@ document.addEventListener('DOMContentLoaded', function () {
                     const userLat = position.coords.latitude;
                     const userLng = position.coords.longitude;
 
-                    // Adiciona marcador para a localização do usuário
-                    addPin(userLat, userLng, null, true);
+                    if (!userLocationMarker) {
+                        userLocationMarker = addPin(userLat, userLng, 'assets/pin1.png');
+                    }
 
-                    // Centraliza o mapa na localização do usuário
                     map.setView([userLat, userLng], 14);
                 },
-                () => {
-                    console.warn('Não foi possível obter a localização do usuário. Usando localização padrão.');
+                (error) => {
+                    console.warn('Erro ao acessar localização do usuário:', error.message);
                     useDefaultLocation();
                 }
             );
         } else {
-            console.warn('Geolocalização não suportada. Usando localização padrão.');
+            console.warn('Geolocalização não suportada pelo navegador.');
             useDefaultLocation();
         }
     }
 
-    // Função para usar localização padrão
     function useDefaultLocation() {
-        addPin(defaultLocation.lat, defaultLocation.lng, null, true);
-        map.setView([defaultLocation.lat, defaultLocation.lng], 12);
-    }
-
-    function traceRoute(destLat, destLng) {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                (position) => {
-                    const userLat = position.coords.latitude;
-                    const userLng = position.coords.longitude;
-
-                    // Adicionar rota ao mapa (assumindo que `map` é global)
-                    if (routingControl) {
-                        map.removeControl(routingControl); // Remove rota anterior
-                    }
-                    routingControl = L.Routing.control({
-                        waypoints: [
-                            L.latLng(userLat, userLng),
-                            L.latLng(destLat, destLng)
-                        ],
-                        routeWhileDragging: true,
-                        createMarker: function () { return null; } // Sem marcadores de rota
-                    }).addTo(map);
-
-                    // Ajustar o zoom para incluir toda a rota
-                    map.fitBounds([[userLat, userLng], [destLat, destLng]], { padding: [50, 50] });
-                },
-                (error) => {
-                    alert('Não foi possível obter sua localização: ' + error.message);
-                }
-            );
-        } else {
-            alert('Seu navegador não suporta geolocalização.');
+        if (!userLocationMarker) {
+            userLocationMarker = addPin(DEFAULT_LOCATION.latitude, DEFAULT_LOCATION.longitude, 'assets/pin1.png');
         }
+        map.setView([DEFAULT_LOCATION.latitude, DEFAULT_LOCATION.longitude], 12);
     }
 
-
-    // Função para buscar os plantões do dia
-    async function fetchShifts() {
+    async function fetchShiftsForSelectedDay() {
         try {
-            const selectedDate = new Date();
-            const formattedDate = selectedDate.toISOString().split('T')[0];
-
-            const response = await fetch(`http://localhost:8080/pharmacy/on-duty?date=${formattedDate}`, {
+            const response = await fetch(`http://localhost:8080/pharmacy/on-duty?date=${selectedDate.toISOString().split('T')[0]}`, {
                 method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
+                headers: { 'Content-Type': 'application/json' },
             });
 
             if (!response.ok) throw new Error('Erro ao carregar os plantões.');
 
             const shifts = await response.json();
+            updateSideMenu(shifts);
 
-            // Adiciona marcadores das farmácias em plantão
+            markersLayer.clearLayers();
+            if (routingControl) {
+                map.removeControl(routingControl);
+            }
+
             shifts.forEach(shift => {
-                addPin(shift.latitude, shift.longitude, shift);
+                if (shift.latitude && shift.longitude) {
+                    const marker = addPin(shift.latitude, shift.longitude, 'assets/pin.png');
+                    markersLayer.addLayer(marker);
+                } else {
+                    console.warn(`Farmácia "${shift.name}" não possui coordenadas válidas.`);
+                }
             });
         } catch (error) {
             console.error('Erro ao buscar os plantões:', error.message);
@@ -141,11 +122,70 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     }
 
-    // Inicializa a busca dos plantões e localização do usuário
-    fetchShifts();
+    function updateSideMenu(shifts) {
+        const sideMenu = document.getElementById('pharmaciesMenu');
+        sideMenu.innerHTML = '';
+
+        if (shifts.length > 0) {
+            shifts.forEach(shift => {
+                const pharmacy = shift;
+                const shiftDiv = document.createElement('div');
+                shiftDiv.classList.add('pharmacy-card');
+                shiftDiv.innerHTML = `
+                    <h3>${pharmacy.name}</h3>
+                    <p><strong>Endereço:</strong> ${pharmacy.address}, ${pharmacy.city} - ${pharmacy.state}</p>
+                    <p><strong>Telefone:</strong> ${pharmacy.phone}</p>
+                    <h4>Horário de Funcionamento</h4>
+                    <p>${shift.startTime} às ${shift.endTime}</p> 
+                `;
+                shiftDiv.addEventListener('click', () => {
+                    if (pharmacy.latitude && pharmacy.longitude) {
+                        map.setView([pharmacy.latitude, pharmacy.longitude], 14);
+                        addPin(pharmacy.latitude, pharmacy.longitude, 'assets/pin.png');
+                    } else {
+                        alert(`Farmácia "${pharmacy.name}" não possui localização válida.`);
+                    }
+                });
+
+                sideMenu.appendChild(shiftDiv);
+            });
+        } else {
+            sideMenu.innerHTML = '<h5>Não há plantões para este dia.</h5>';
+        }
+    }
+
+    let selectedDate = new Date();
+
+    function formatDate(date) {
+        const dayOfWeek = date.toLocaleString('default', { weekday: 'long' });
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return { dayOfWeek, fullDate: `${day}/${month}/${year}` };
+    }
+
+    function updateDateDisplay() {
+        const { dayOfWeek, fullDate } = formatDate(selectedDate);
+        document.getElementById('dayOfWeek').textContent = dayOfWeek;
+        document.getElementById('fullDate').textContent = fullDate;
+    }
+
+    document.getElementById('prevDay').addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() - 1);
+        updateDateDisplay();
+        fetchShiftsForSelectedDay();
+    });
+
+    document.getElementById('nextDay').addEventListener('click', () => {
+        selectedDate.setDate(selectedDate.getDate() + 1);
+        updateDateDisplay();
+        fetchShiftsForSelectedDay();
+    });
+
+    updateDateDisplay();
+    fetchShiftsForSelectedDay();
     getUserLocation();
 });
-
 
 const menuButton = document.getElementById('menuButton');
 const sideMenu = document.getElementById('sideMenu');
